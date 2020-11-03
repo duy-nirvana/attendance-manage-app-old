@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -8,16 +8,21 @@ import SettingsScreen from '../screens/settings';
 const Tab = createMaterialBottomTabNavigator();
 
 const Navigator = (props) => {
+    const [hasOpenCamera, setOpenCamera] = useState(false);
+
+    const handleCamera = (status) => {
+        setOpenCamera(status);
+    }
     
     return (
         <Tab.Navigator
             initialRouteName="App"
             activeColor= "navy"
-            barStyle={{ backgroundColor: '#fff' }}
+            barStyle={{ backgroundColor: '#fff', borderTopWidth: .4, borderTopColor: '#aaa' }}
         >
             <Tab.Screen 
                 name="Scan"
-                component={ScanScreen}
+                children={(props) => <ScanScreen {...props} handleCamera={handleCamera} hasOpenCamera={hasOpenCamera} />}
                 options={{
                     tabBarLabel: 'Scan',
                     tabBarIcon: ({ color }) => (
@@ -27,7 +32,7 @@ const Navigator = (props) => {
             />
             <Tab.Screen 
                 name="Settings"
-                component={SettingsScreen}
+                children={(props) => <SettingsScreen {...props} handleCamera={handleCamera} />}
                 options={{
                     tabBarLabel: 'Settings',
                     tabBarIcon: ({ color }) => (
@@ -35,6 +40,7 @@ const Navigator = (props) => {
                     ),
                 }}
             />
+                
         </Tab.Navigator>
     )
 }
