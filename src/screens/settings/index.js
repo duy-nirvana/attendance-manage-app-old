@@ -6,11 +6,12 @@ const fullWidth = Dimensions.get('screen').width; //full width
 const statusBarHeight = StatusBar.currentHeight;
 
 const SettingsScreen = (props) => {
-    const {navigation, handleCamera} = props;
+    const {navigation, handleCamera, handleScan} = props;
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('tabPress', e => {
             handleCamera(false);
+            handleScan(false);
         });
     
         return unsubscribe;

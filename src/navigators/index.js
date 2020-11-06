@@ -9,9 +9,14 @@ const Tab = createMaterialBottomTabNavigator();
 
 const Navigator = (props) => {
     const [hasOpenCamera, setOpenCamera] = useState(false);
+    const [hasScaned, setScaned] = useState(false);
 
     const handleCamera = (status) => {
         setOpenCamera(status);
+    }
+
+    const handleScan = (status) => {
+        setScaned(status);
     }
     
     return (
@@ -22,7 +27,7 @@ const Navigator = (props) => {
         >
             <Tab.Screen 
                 name="Scan"
-                children={(props) => <ScanScreen {...props} handleCamera={handleCamera} hasOpenCamera={hasOpenCamera} />}
+                children={(props) => <ScanScreen {...props} handleCamera={handleCamera} hasOpenCamera={hasOpenCamera} hasScaned={hasScaned} handleScan={handleScan} />}
                 options={{
                     tabBarLabel: 'Scan',
                     tabBarIcon: ({ color }) => (
@@ -32,7 +37,7 @@ const Navigator = (props) => {
             />
             <Tab.Screen 
                 name="Settings"
-                children={(props) => <SettingsScreen {...props} handleCamera={handleCamera} />}
+                children={(props) => <SettingsScreen {...props} handleCamera={handleCamera} handleScan={handleScan} />}
                 options={{
                     tabBarLabel: 'Settings',
                     tabBarIcon: ({ color }) => (
