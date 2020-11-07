@@ -3,6 +3,7 @@ import {Text, View, Dimensions, Button, StyleSheet} from 'react-native';
 // import QRCode from 'react-native-qrcode-svg';
 
 import {Camera} from 'expo-camera';
+import {BarCodeScanner} from 'expo-barcode-scanner';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const fullWidth = Dimensions.get('screen').width;
@@ -14,7 +15,7 @@ const ScanScreen = (props) => {
 
     useEffect(() => {
         (async () => {
-        const { status } = await BarCodeScanner.requestPermissionsAsync();
+        const { status } = await Camera.requestPermissionsAsync();
         setHasPermission(status === 'granted');
         })();
     }, []);
