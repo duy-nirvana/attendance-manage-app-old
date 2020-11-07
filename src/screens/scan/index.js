@@ -5,6 +5,7 @@ import {Text, View, Dimensions, Button, StyleSheet} from 'react-native';
 import {Camera} from 'expo-camera';
 import {BarCodeScanner} from 'expo-barcode-scanner';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const fullWidth = Dimensions.get('screen').width;
 
@@ -33,7 +34,7 @@ const ScanScreen = (props) => {
             }
         
         return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                 <Text>Scan QRCode here</Text>
                 
                 {/* <QRCode 
@@ -50,47 +51,45 @@ const ScanScreen = (props) => {
                             barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
                         }}
                         style={[StyleSheet.absoluteFill]}
-                    />
+                    >
+                        <View
+                            style={{
+                                flex: 1,
+                                backgroundColor: 'transparent',
+                                flexDirection: 'row',
+                            }}>
+                            <TouchableOpacity
+                                style={{
+                                    flex: 1,
+                                    alignItems: 'flex-end',
+                                }}
+                                onPress={() => {
+                                    setType(
+                                        type === BarCodeScanner.Constants.Type.back
+                                            ? BarCodeScanner.Constants.Type.front
+                                        : BarCodeScanner.Constants.Type.back
 
-                    // <BarCodeScanner
-                        
-                    //     style={{
-                    //         width: Dimensions.get('screen').width,
-                    //         height: Dimensions.get('screen').height,
-                    //     }}
-                    // >
-                    //     <View
-                    //         style={{
-                    //             flex: 1,
-                    //             backgroundColor: 'transparent',
-                    //             flexDirection: 'row',
-                    //         }}>
-                    //         <TouchableOpacity
-                    //             style={{
-                    //                 flex: 1,
-                    //                 alignItems: 'flex-end',
-                    //             }}
-                    //             onPress={() => {
-                    //                 setType(
-                    //                     type === BarCodeScanner.Constants.Type.back
-                    //                         ? BarCodeScanner.Constants.Type.front
-                    //                     : BarCodeScanner.Constants.Type.back
-
-                    //                 );
-                    //             }}>
-                    //         </TouchableOpacity>
-                    //     </View>
-                        
-                    // </BarCodeScanner>
+                                    );
+                                }}>
+                            </TouchableOpacity>
+                        </View>
+                    </Camera>
                     :
-                    <Button title={'Touch to scan'} onPress={() => handleCamera(true)} />
+                    <Button 
+                        title={'Touch to scan'}
+                        onPress={() => handleCamera(true)}
+                    />
                 }
 
                 {hasScaned && 
-                    <Button 
-                        title={'Tap to Scan Again'} 
-                        onPress={() => handleScan(false)} 
-                    />
+                    <View style={{flex:1 , justifyContent: 'flex-end'}}>
+                        {/* <Button 
+                            title={'Tap to Scan Again'} 
+                            onPress={() => handleScan(false)} 
+                            style={{padding: 20}}
+                        /> */}
+                        <MaterialCommunityIcons name="reload" size={80} color="#fff" onPress={() => handleScan(false)} />
+                    </View>
                 }
         </View>
     )
