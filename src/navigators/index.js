@@ -41,7 +41,7 @@ const Navigator = (props) => {
                 options={{
                     tabBarLabel: 'Settings',
                     tabBarIcon: ({ color }) => (
-                    <MaterialCommunityIcons name="settings" color={color} size={26} />
+                        <MaterialCommunityIcons name="settings" color={color} size={26} />
                     ),
                 }}
             />

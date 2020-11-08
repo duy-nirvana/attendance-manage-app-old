@@ -10,7 +10,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 const fullWidth = Dimensions.get('screen').width;
 
 const ScanScreen = (props) => {
-    const {hasOpenCamera, handleCamera, hasScaned, handleScan} = props;
+    const {navigation ,hasOpenCamera, handleCamera, hasScaned, handleScan} = props;
     const [hasPermission, setHasPermission] = useState(null);
     const [type, setType] = useState(BarCodeScanner.Constants.Type.back);
 
@@ -20,6 +20,15 @@ const ScanScreen = (props) => {
         setHasPermission(status === 'granted');
         })();
     }, []);
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('tabPress', () => {
+            handleCamera(false);
+            handleScan(false);
+        });
+
+        return unsubscribe;
+    }, [navigation]);
 
     const handleBarCodeScanned = ({ type, data }) => {
         handleScan(true);
@@ -83,11 +92,6 @@ const ScanScreen = (props) => {
 
                 {hasScaned && 
                     <View style={{flex:1 , justifyContent: 'flex-end'}}>
-                        {/* <Button 
-                            title={'Tap to Scan Again'} 
-                            onPress={() => handleScan(false)} 
-                            style={{padding: 20}}
-                        /> */}
                         <MaterialCommunityIcons name="reload" size={80} color="#fff" onPress={() => handleScan(false)} />
                     </View>
                 }
