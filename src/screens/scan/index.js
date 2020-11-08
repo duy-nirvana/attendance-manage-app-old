@@ -62,6 +62,7 @@ const ScanScreen = (props) => {
                     hasOpenCamera ? 
                     <Camera
                         onBarCodeScanned={hasScaned ? undefined : handleBarCodeScanned}
+                        flashMode={Camera.Constants.FlashMode.on}
                         barCodeScannerSettings={{
                             barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
                         }}
@@ -103,9 +104,9 @@ const ScanScreen = (props) => {
 
                 {
                     hasOpenCamera && 
-                    <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end', marginTop: 20 + statusBarHeight, marginRight: 20}}>
-                        <MaterialCommunityIcons name="close" size={80} color="#fff" onPress={() => handleCloseCamera()} />
-                    </View> 
+                        <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end', marginTop: 40 + statusBarHeight, marginLeft: 25, marginRight: 25}}>
+                            <MaterialCommunityIcons name="close" size={50} color="#fff" onPress={() => handleCloseCamera()} />
+                        </View> 
                 }
 
                 {
