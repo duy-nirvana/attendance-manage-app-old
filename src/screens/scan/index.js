@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import {Text, View, Dimensions, Button, StyleSheet} from 'react-native';
+import {Text, View, Dimensions, StyleSheet, StatusBar} from 'react-native';
+import { Button } from 'react-native-paper';
 // import QRCode from 'react-native-qrcode-svg';
 
 import {Camera} from 'expo-camera';
@@ -8,6 +9,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const fullWidth = Dimensions.get('screen').width;
+const statusBarHeight = StatusBar.currentHeight;
 
 const ScanScreen = (props) => {
     const {navigation ,hasOpenCamera, handleCamera, hasScaned, handleScan} = props;
@@ -30,6 +32,11 @@ const ScanScreen = (props) => {
         return unsubscribe;
     }, [navigation]);
 
+    const handleCloseCamera = () => {
+        handleCamera(false);
+        handleScan(false);
+    }
+
     const handleBarCodeScanned = ({ type, data }) => {
         handleScan(true);
         alert(`Ban da diem danh thanh cong! ${data}`);
@@ -43,8 +50,7 @@ const ScanScreen = (props) => {
             }
         
         return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                <Text>Scan QRCode here</Text>
+            <View style={{ flex: 1}}>
                 
                 {/* <QRCode 
                     value="heheboiz"
@@ -84,14 +90,27 @@ const ScanScreen = (props) => {
                         </View>
                     </Camera>
                     :
-                    <Button 
-                        title={'Touch to scan'}
-                        onPress={() => handleCamera(true)}
-                    />
+                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                        <Button 
+                            onPress={() => handleCamera(true)}
+                            mode={"contained"}
+                            style={{backgroundColor: 'navy', padding: 10}}
+                        >
+                            Touch to scan
+                        </Button>
+                    </View>
                 }
 
-                {hasScaned && 
-                    <View style={{flex:1 , justifyContent: 'flex-end'}}>
+                {
+                    hasOpenCamera && 
+                    <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end', marginTop: 20 + statusBarHeight, marginRight: 20}}>
+                        <MaterialCommunityIcons name="close" size={80} color="#fff" onPress={() => handleCloseCamera()} />
+                    </View> 
+                }
+
+                {
+                    hasScaned && 
+                    <View style={{flex:1, justifyContent: 'flex-end', alignItems: 'center'}}>
                         <MaterialCommunityIcons name="reload" size={80} color="#fff" onPress={() => handleScan(false)} />
                     </View>
                 }
