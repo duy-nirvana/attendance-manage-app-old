@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react';
-import {Image, View, ScrollView, Dimensions, StatusBar} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {Image, View,Text, ScrollView, Dimensions, StatusBar} from 'react-native';
 import {TextInput, Button} from 'react-native-paper';
+import { useSelector } from 'react-redux';
 
 const fullWidth = Dimensions.get('screen').width; //full width
 const statusBarHeight = StatusBar.currentHeight;
 
 const SettingsScreen = (props) => {
-    const {} = props;
+    const profileUser = useSelector(state => state.profile.profile);
 
     return (
         <View style={{backgroundColor: 'white'}}>
@@ -20,13 +21,13 @@ const SettingsScreen = (props) => {
                 <TextInput
                     style={{width: fullWidth * .9,  backgroundColor: 'white'}}
                     label="HỌ VÀ TÊN"
-                    value="Khánh Duy"
+                    value={profileUser.fullName}
                     editable={false}
                 />
                 <TextInput
                     style={{width: fullWidth * .9,  backgroundColor: 'white'}}
                     label="MSSV"
-                    value="1711062181"
+                    value={profileUser.codeNumber}
                     editable={false}
                 />
                 <TextInput
