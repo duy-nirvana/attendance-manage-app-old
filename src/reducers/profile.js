@@ -2,8 +2,8 @@ import { Types } from '../actions/actionTypes';
 
 const initialState = {
     profile: {
-        fullName: 'Duy',
-        codeNumber: '123456789zzzz',
+        fullName: '',
+        codeNumber: '',
         password: '',
         email: '',
         phone: '',
@@ -14,10 +14,10 @@ const initialState = {
 
 const profileReducer = (state = initialState, action) => {
     switch (action.type) {
-        case Types.LOGIN:
+        case Types.GET_PROFILE:
             return {
                 ...state,
-                profile: action.payload.user
+                profile: action.payload
             }
         default: {
             return state;

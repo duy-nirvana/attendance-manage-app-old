@@ -1,3 +1,6 @@
 export const Types = {
-    LOGIN: 'LOGIN'
+    GET_PROFILE: 'GET_PROFILE',
+    RESTORE_TOKEN: 'RESTORE_TOKEN',
+    SIGN_IN: 'SIGN_IN',
+    SIGN_OUT: 'SIGN_OUT'
 }
