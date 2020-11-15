@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import ScanScreen from '../screens/scan';
@@ -8,7 +7,6 @@ import SettingsScreen from '../screens/settings';
 import LoginScreen from '../screens/login';
 
 const Tab = createMaterialBottomTabNavigator();
-const Stack = createStackNavigator();
 
 const Navigator = (props) => {
     const [hasOpenCamera, setOpenCamera] = useState(false);
@@ -54,7 +52,6 @@ const Navigator = (props) => {
                 />
                 
                 </Tab.Navigator>
-                
                 ) : (
                     <LoginScreen />
                 )
