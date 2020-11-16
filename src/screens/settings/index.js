@@ -22,9 +22,9 @@ const SettingsScreen = (props) => {
         const userProfile = async () => {
             try {
                 const user = await userApi.getDetail(auth.userToken);
-                dispatch({type: 'GET_PROFILE', payload: user})
+                dispatch({type: 'GET_PROFILE', payload: user});
             } catch (error) {
-                console.log('Fail to get detail user');
+                console.log('Fail to get detail user', error);
             }
         }
         userProfile();

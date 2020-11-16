@@ -9,19 +9,21 @@ const statusBarHeight = StatusBar.currentHeight;
 const fullWidth = Dimensions.get('screen').width; //full width
 
 const LoginScreen = (props) => {
-    const auth = useSelector(state => state.auth);
     const dispatch = useDispatch();
     const [codeNumberValue, setCodeNumber] = useState('');
     const [passwordValue, setPasswordValue] = useState(''); 
     const [valueForm, setValueForm] = useState({});
-
-    const handleOnPress = async () => {
-        setValueForm(prevState => ({
+    
+    useEffect(() => {
+        setValueForm((prevState) => ({
             ...prevState,
             codeNumber: codeNumberValue,
             password: passwordValue
         }))
 
+    }, [codeNumberValue, passwordValue])
+
+    const handleOnPress = async () => {
         try {
             const loginInfo = await authApi.login(valueForm);
             AsyncStorage.setItem('userToken', loginInfo.token); 
@@ -31,29 +33,6 @@ const LoginScreen = (props) => {
         }
     }
         
-    useEffect(() => {
-        // Fetch the token from storage then navigate to our appropriate place
-        const bootstrapAsync = async () => {
-          let userToken;
-    
-          try {
-            userToken = await AsyncStorage.getItem('userToken');
-          } catch (e) {
-            // Restoring token failed
-            console.log('Fail to get token', e);
-          }
-    
-          // After restoring token, we may need to validate it in production apps
-    
-          // This will switch to the App screen or Auth screen and this loading
-          // screen will be unmounted and thrown away.
-          dispatch({ type: 'RESTORE_TOKEN', token: userToken });
-        };
-    
-        bootstrapAsync();
-      }, []);
-    
-
     return (
         <View style={{flex: 1, marginTop: statusBarHeight + 100, alignItems: "center" }}>
             <Title style={{fontSize: 25, marginBottom: 10 }} >APP ĐIỂM DANH</Title>
