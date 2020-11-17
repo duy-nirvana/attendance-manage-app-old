@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {Text, View, Dimensions, StyleSheet, StatusBar, Modal} from 'react-native';
 import { Button } from 'react-native-paper';
-// import QRCode from 'react-native-qrcode-svg';
+import QRCode from 'react-native-qrcode-svg';
 
 import {Camera} from 'expo-camera';
 import {BarCodeScanner} from 'expo-barcode-scanner';
@@ -18,6 +18,7 @@ const ScanScreen = (props) => {
 
     // QR-CODE AREA
     const [hasOpenQRCode, setOpenQRCode] = useState(false);
+    const [hasSettingQRCode, setSettingQRCode] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -40,9 +41,14 @@ const ScanScreen = (props) => {
         handleScan(false);
     }
 
+    const handleCloseQRCode = () => {
+        setOpenQRCode(false);
+        setSettingQRCode(false);
+    }
+
     const handleBarCodeScanned = ({ type, data }) => {
         handleScan(true);
-        alert(`Ban da diem danh thanh cong! ${data}, ${type}`);
+        alert(`Ban da diem danh thanh cong! ${data}, type: ${type}`);
             };
 
             if (hasPermission === null) {
@@ -123,9 +129,22 @@ const ScanScreen = (props) => {
                 animationType="slide"
                 visible={hasOpenQRCode}
             >   
-                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                    <Text>THIS IS MODAL</Text>
-                    <Button onPress={() => setOpenQRCode(!hasOpenQRCode)}>Close Modal</Button>
+                <View style={{flex: 1}}>
+                    <View style={{justifyContent: 'flex-start', alignItems: 'flex-end'}}>
+                        <MaterialCommunityIcons name="close" size={50} color="#000" onPress={handleCloseQRCode} />
+                    </View>
+                    <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+                        <Text>Select option here</Text>
+                        <Button onPress={() => setSettingQRCode(true)} >OK</Button>
+                        {
+                            hasSettingQRCode &&
+                            <QRCode
+                                size={fullWidth * 0.9}
+                                value="trankhanhduy"
+                            />
+                        }
+                    </View>
+                    
                 </View>
             </Modal>
         </View>
