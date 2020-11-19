@@ -4,6 +4,7 @@ import {TextInput, Button} from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import userApi from '../../api/userApi';
+import classApi from '../../api/classApi';
 
 const fullWidth = Dimensions.get('screen').width; //full width
 const statusBarHeight = StatusBar.currentHeight;
@@ -22,7 +23,13 @@ const SettingsScreen = (props) => {
         const userProfile = async () => {
             try {
                 const user = await userApi.getDetail(auth.userToken);
-                dispatch({type: 'GET_PROFILE', payload: user});
+                const classroom = await classApi.getById(user.classroom);
+                const payloadUser = {
+                    ...user,
+                    classroom: classroom.name
+                };
+
+                dispatch({type: 'GET_PROFILE', payload: payloadUser});
             } catch (error) {
                 console.log('Fail to get detail user', error);
             }

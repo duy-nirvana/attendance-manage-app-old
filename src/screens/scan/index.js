@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import {Text, View, Dimensions, StyleSheet, StatusBar, Modal} from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import {Text, View, Dimensions, StyleSheet, StatusBar, Modal, ScrollView, SafeAreaView} from 'react-native';
 import { Button } from 'react-native-paper';
 import QRCode from 'react-native-qrcode-svg';
 
@@ -7,6 +7,12 @@ import {Camera} from 'expo-camera';
 import {BarCodeScanner} from 'expo-barcode-scanner';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+// DropDown
+import MultiSelect from 'react-native-multiple-select';
+import classApi from '../../api/classApi';
+import subjectApi from '../../api/subjectApi';
+
 
 const fullWidth = Dimensions.get('screen').width;
 const statusBarHeight = StatusBar.currentHeight;
@@ -19,7 +25,55 @@ const ScanScreen = (props) => {
     // QR-CODE AREA
     const [hasOpenQRCode, setOpenQRCode] = useState(false);
     const [hasSettingQRCode, setSettingQRCode] = useState(false);
+    const [infoQRCode, setInfoQRCode] = useState("");
+    
+   
 
+    // DROPDOWN
+    const [classes, setClasses] = useState([]);
+    const [subject, setSubject] = useState([]);
+    const [selectedClasses, setSelectedClasses] = useState([]);
+    const [selectedSubject, setSelectedSubject] = useState([]);
+
+    const stringQRCode = {
+        classes: selectedClasses,
+        subject: selectedSubject
+    }
+    
+
+    useEffect(() => {
+        const fetchClasses = async () => {
+            try {
+                const res = await classApi.getAll();
+                setClasses(res);
+            } catch (err) {
+                console.log('fail to fetch data classes', err);
+            }
+        }
+        const fetchSubject = async () => {
+            try {
+                const res = await subjectApi.getAll();
+                setSubject(res);
+            } catch (err) {
+                console.log('fail to fetch data subject', err);
+            } 
+        }
+
+        fetchClasses();
+        fetchSubject();
+    }, [])
+
+    const generateQRCode = () => {
+        setInfoQRCode(JSON.stringify(stringQRCode));
+        setSettingQRCode(true);
+    }
+
+    console.log('info', stringQRCode);
+    console.log('classes', selectedClasses);
+    console.log('infoQRCode', infoQRCode);
+
+
+    // ---------------------------------------------------------
     useEffect(() => {
         (async () => {
             const { status } = await Camera.requestPermissionsAsync();
@@ -133,17 +187,68 @@ const ScanScreen = (props) => {
                     <View style={{justifyContent: 'flex-start', alignItems: 'flex-end'}}>
                         <MaterialCommunityIcons name="close" size={50} color="#000" onPress={handleCloseQRCode} />
                     </View>
-                    <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
-                        <Text>Select option here</Text>
-                        <Button onPress={() => setSettingQRCode(true)} >OK</Button>
-                        {
-                            hasSettingQRCode &&
-                            <QRCode
-                                size={fullWidth * 0.9}
-                                value="trankhanhduy"
+                    <SafeAreaView style={{flex:1, paddingLeft: 10, paddingRight: 10}}>
+
+                            <Text style={{marginBottom: 5, textAlign: 'center'}}>LỚP HỌC</Text>
+                            <MultiSelect
+                                items={classes}
+                                uniqueKey="_id"
+                                ref={(component) => { multiSelect = component }}
+                                onSelectedItemsChange={(item) => setSelectedClasses(item)}
+                                selectedItems={selectedClasses}
+                                selectText="Chọn lớp học"
+                                searchInputPlaceholderText="Tìm lớp học..."
+                                // onChangeInput={ (text)=> console.log(text)}
+                                tagRemoveIconColor="#fff"
+                                tagBorderColor="#2d88ff"
+                                tagTextColor="#fff"
+                                selectedItemTextColor="navy"
+                                selectedItemIconColor="navy"
+                                itemTextColor="#aaa"
+                                displayKey="name"
+                                searchInputStyle={{ color: '#CCC' }}
+                                tagContainerStyle={{backgroundColor: "#2d88ff", width: fullWidth * 0.4}}
+                                submitButtonColor="navy"
+                                hideSubmitButton={true}
+                                fixedHeight={true}
                             />
-                        }
-                    </View>
+                            <Text style={{marginBottom: 5, marginTop: 10, textAlign: 'center'}}>MÔN HỌC</Text>
+                            <MultiSelect
+                                single={true}
+                                items={subject}
+                                uniqueKey="_id"
+                                ref={(component) => { multiSelect = component }}
+                                onSelectedItemsChange={(item) => setSelectedSubject(item)}
+                                selectedItems={selectedSubject}
+                                selectText="Chọn môn học"
+                                searchInputPlaceholderText="Tìm môn học..."
+                                // onChangeInput={ (text)=> console.log(text)}
+                                tagRemoveIconColor="#2d88ff"
+                                tagBorderColor="#2d88ff"
+                                tagTextColor="#2d88ff"
+                                selectedItemTextColor="navy"
+                                selectedItemIconColor="navy"
+                                itemTextColor="#aaa"
+                                displayKey="name"
+                                searchInputStyle={{ color: '#CCC' }}
+                                submitButtonColor="navy"
+                                submitButtonText="Chọn"
+                            />
+                            
+                            <Button onPress={generateQRCode} >OK</Button>
+                            {   
+                            <Modal visible={hasSettingQRCode}
+                            >
+                                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}} >
+                                    <QRCode
+                                        size={fullWidth * 0.9}
+                                        value={infoQRCode}
+                                    />
+                                </View>
+                                <Button onPress={() => setSettingQRCode(false)}>Close</Button>
+                            </Modal>
+                            }
+                    </SafeAreaView>
                     
                 </View>
             </Modal>
