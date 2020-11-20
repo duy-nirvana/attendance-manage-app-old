@@ -7,7 +7,7 @@ const initialState = {
         password: '',
         email: '',
         phone: '',
-        classroom: '',
+        classroom: {},
         avatar: ''
     }
 }

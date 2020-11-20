@@ -23,13 +23,8 @@ const SettingsScreen = (props) => {
         const userProfile = async () => {
             try {
                 const user = await userApi.getDetail(auth.userToken);
-                const classroom = await classApi.getById(user.classroom);
-                const payloadUser = {
-                    ...user,
-                    classroom: classroom.name
-                };
 
-                dispatch({type: 'GET_PROFILE', payload: payloadUser});
+                dispatch({type: 'GET_PROFILE', payload: user});
             } catch (error) {
                 console.log('Fail to get detail user', error);
             }
@@ -61,7 +56,7 @@ const SettingsScreen = (props) => {
                 <TextInput
                     style={{width: fullWidth * .9,  backgroundColor: 'white'}}
                     label="LỚP"
-                    value={profileUser.classroom}
+                    value={profileUser.classroom.name}
                     editable={false}
                 />
                 <TextInput

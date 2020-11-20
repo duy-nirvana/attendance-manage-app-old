@@ -68,10 +68,6 @@ const ScanScreen = (props) => {
         setSettingQRCode(true);
     }
 
-    console.log('info', stringQRCode);
-    console.log('classes', selectedClasses);
-    console.log('infoQRCode', infoQRCode);
-
 
     // ---------------------------------------------------------
     useEffect(() => {
@@ -103,14 +99,14 @@ const ScanScreen = (props) => {
     const handleBarCodeScanned = ({ type, data }) => {
         handleScan(true);
         alert(`Ban da diem danh thanh cong! ${data}, type: ${type}`);
-            };
+    };
 
-            if (hasPermission === null) {
-                return <Text>Requesting for camera permission</Text>;
-            }
-            if (hasPermission === false) {
-                return <Text>No access to camera</Text>;
-            }
+    if (hasPermission === null) {
+        return <Text>Requesting for camera permission</Text>;
+    }
+    if (hasPermission === false) {
+        return <Text>No access to camera</Text>;
+    }
         
     return (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -242,7 +238,8 @@ const ScanScreen = (props) => {
                                 <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}} >
                                     <QRCode
                                         size={fullWidth * 0.9}
-                                        value={infoQRCode}
+                                        // value={infoQRCode}
+                                        value="5fb7acc40b20dc3d794a1b68"
                                     />
                                 </View>
                                 <Button onPress={() => setSettingQRCode(false)}>Close</Button>
