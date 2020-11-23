@@ -13,6 +13,7 @@ import MultiSelect from 'react-native-multiple-select';
 import classApi from '../../api/classApi';
 import subjectApi from '../../api/subjectApi';
 import {Picker} from '@react-native-picker/picker';
+import qrcodeApi from '../../api/qrcodeApi';
 
 const fullWidth = Dimensions.get('screen').width;
 const statusBarHeight = StatusBar.currentHeight;
@@ -29,12 +30,12 @@ const ScanScreen = (props) => {
     
    
 
-    // DROPDOWN
+    // DROPDOWN GENERATE QRCODE
     const [classes, setClasses] = useState([]);
     const [subject, setSubject] = useState([]);
     const [selectedClasses, setSelectedClasses] = useState([]);
     const [selectedSubject, setSelectedSubject] = useState([]);
-    const [selectedTime, setSelectedTime] = useState(30);
+    const [selectedTime, setSelectedTime] = useState(30000);
 
     const stringQRCode = {
         classes: selectedClasses,
@@ -42,8 +43,6 @@ const ScanScreen = (props) => {
         time: selectedTime
     }
     
-    console.log('qrcode info', stringQRCode);
-
     useEffect(() => {
         const fetchClasses = async () => {
             try {
@@ -67,8 +66,16 @@ const ScanScreen = (props) => {
     }, [])
 
     const generateQRCode = () => {
-        setInfoQRCode(JSON.stringify(stringQRCode));
-        setSettingQRCode(true);
+        // setInfoQRCode(JSON.stringify(stringQRCode));
+        // setSettingQRCode(true);
+        try {
+            qrcodeApi.createOne(stringQRCode)
+            .then((data) => {
+                qrcodeApi.updateById(data._id)
+            })
+        } catch (error) {
+            console.log('fail to post qrcode info', );
+        }
     }
 
 
@@ -236,13 +243,13 @@ const ScanScreen = (props) => {
                                 selectedValue={selectedTime}
                                 style={{height: 50, width: fullWidth * 0.9}}
                                 onValueChange={(itemValue, itemIndex) => setSelectedTime(itemValue)}>
-                                <Picker.Item label="30 giây" value={30} />
-                                <Picker.Item label="1 phút" value={60} />
-                                <Picker.Item label="1 phút 30 giây" value={90} />
-                                <Picker.Item label="2 phút" value={120} />
-                                <Picker.Item label="3 phút" value={180} />
-                                <Picker.Item label="4 phút" value={240} />
-                                <Picker.Item label="5 phút" value={300} />
+                                <Picker.Item label="30 giây" value={30000} />
+                                <Picker.Item label="1 phút" value={60000} />
+                                <Picker.Item label="1 phút 30 giây" value={90000} />
+                                <Picker.Item label="2 phút" value={120000} />
+                                <Picker.Item label="3 phút" value={180000} />
+                                <Picker.Item label="4 phút" value={240000} />
+                                <Picker.Item label="5 phút" value={300000} />
                             </Picker>
                             
                             <Button 
