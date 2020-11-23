@@ -12,7 +12,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import MultiSelect from 'react-native-multiple-select';
 import classApi from '../../api/classApi';
 import subjectApi from '../../api/subjectApi';
-
+import {Picker} from '@react-native-picker/picker';
 
 const fullWidth = Dimensions.get('screen').width;
 const statusBarHeight = StatusBar.currentHeight;
@@ -34,12 +34,15 @@ const ScanScreen = (props) => {
     const [subject, setSubject] = useState([]);
     const [selectedClasses, setSelectedClasses] = useState([]);
     const [selectedSubject, setSelectedSubject] = useState([]);
+    const [selectedTime, setSelectedTime] = useState(30);
 
     const stringQRCode = {
         classes: selectedClasses,
-        subject: selectedSubject
+        subject: selectedSubject,
+        time: selectedTime
     }
     
+    console.log('qrcode info', stringQRCode);
 
     useEffect(() => {
         const fetchClasses = async () => {
@@ -183,9 +186,9 @@ const ScanScreen = (props) => {
                     <View style={{justifyContent: 'flex-start', alignItems: 'flex-end'}}>
                         <MaterialCommunityIcons name="close" size={50} color="#000" onPress={handleCloseQRCode} />
                     </View>
-                    <SafeAreaView style={{flex:1, paddingLeft: 10, paddingRight: 10}}>
-
-                            <Text style={{marginBottom: 5, textAlign: 'center'}}>LỚP HỌC</Text>
+                    <SafeAreaView style={{flex:1, alignItems: "center"}}>
+                        <View>
+                            <Text style={{marginBottom: 5, marginTop: 20, textAlign: 'center'}}>LỚP HỌC</Text>
                             <MultiSelect
                                 items={classes}
                                 uniqueKey="_id"
@@ -194,7 +197,6 @@ const ScanScreen = (props) => {
                                 selectedItems={selectedClasses}
                                 selectText="Chọn lớp học"
                                 searchInputPlaceholderText="Tìm lớp học..."
-                                // onChangeInput={ (text)=> console.log(text)}
                                 tagRemoveIconColor="#fff"
                                 tagBorderColor="#2d88ff"
                                 tagTextColor="#fff"
@@ -208,7 +210,7 @@ const ScanScreen = (props) => {
                                 hideSubmitButton={true}
                                 fixedHeight={true}
                             />
-                            <Text style={{marginBottom: 5, marginTop: 10, textAlign: 'center'}}>MÔN HỌC</Text>
+                            <Text style={{marginBottom: 5, marginTop: 20, textAlign: 'center'}}>MÔN HỌC</Text>
                             <MultiSelect
                                 single={true}
                                 items={subject}
@@ -218,7 +220,6 @@ const ScanScreen = (props) => {
                                 selectedItems={selectedSubject}
                                 selectText="Chọn môn học"
                                 searchInputPlaceholderText="Tìm môn học..."
-                                // onChangeInput={ (text)=> console.log(text)}
                                 tagRemoveIconColor="#2d88ff"
                                 tagBorderColor="#2d88ff"
                                 tagTextColor="#2d88ff"
@@ -230,8 +231,30 @@ const ScanScreen = (props) => {
                                 submitButtonColor="navy"
                                 submitButtonText="Chọn"
                             />
+                            <Text style={{marginBottom: 5, marginTop: 20, textAlign: 'center'}}>THỜI GIAN</Text>
+                            <Picker
+                                selectedValue={selectedTime}
+                                style={{height: 50, width: fullWidth * 0.9}}
+                                onValueChange={(itemValue, itemIndex) => setSelectedTime(itemValue)}>
+                                <Picker.Item label="30 giây" value={30} />
+                                <Picker.Item label="1 phút" value={60} />
+                                <Picker.Item label="1 phút 30 giây" value={90} />
+                                <Picker.Item label="2 phút" value={120} />
+                                <Picker.Item label="3 phút" value={180} />
+                                <Picker.Item label="4 phút" value={240} />
+                                <Picker.Item label="5 phút" value={300} />
+                            </Picker>
                             
-                            <Button onPress={generateQRCode} >OK</Button>
+                            <Button 
+                                mode="outlined" 
+                                color="white" 
+                                style={{width: fullWidth * .9,  backgroundColor: 'navy', padding: 10, marginTop: 30}}
+                                onPress={generateQRCode}
+                            > 
+                                Tạo mã QR Code
+                            </Button>
+                        </View>
+
                             {   
                             <Modal visible={hasSettingQRCode}
                             >
