@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {Text, View, Dimensions, StyleSheet, StatusBar, Modal, ScrollView, SafeAreaView} from 'react-native';
+import {Text, View, Dimensions, StyleSheet, StatusBar, Modal, ScrollView, SafeAreaView, Alert} from 'react-native';
 import { Button } from 'react-native-paper';
 import QRCode from 'react-native-qrcode-svg';
 
@@ -42,6 +42,20 @@ const ScanScreen = (props) => {
         subject: selectedSubject,
         time: selectedTime
     }
+
+    const verifyCreateQRCode = () => {
+        Alert.alert(
+            "QRCODE",
+            "Bạn có đồng ý tạo mã QRCode?",
+            [
+              {
+                text: "Hủy",
+              },
+              { text: "Đồng ý", onPress: () => generateQRCode() }
+            ],
+            { cancelable: false }
+        );
+    }
     
     useEffect(() => {
         const fetchClasses = async () => {
@@ -67,11 +81,12 @@ const ScanScreen = (props) => {
 
     const generateQRCode = () => {
         // setInfoQRCode(JSON.stringify(stringQRCode));
-        // setSettingQRCode(true);
         try {
             qrcodeApi.createOne(stringQRCode)
             .then((data) => {
-                qrcodeApi.updateById(data._id)
+                setInfoQRCode(data._id);
+                setSettingQRCode(true);
+                qrcodeApi.updateById(data._id);
             })
         } catch (error) {
             console.log('fail to post qrcode info', );
@@ -256,7 +271,7 @@ const ScanScreen = (props) => {
                                 mode="outlined" 
                                 color="white" 
                                 style={{width: fullWidth * .9,  backgroundColor: 'navy', padding: 10, marginTop: 30}}
-                                onPress={generateQRCode}
+                                onPress={verifyCreateQRCode}
                             > 
                                 Tạo mã QR Code
                             </Button>
@@ -268,8 +283,7 @@ const ScanScreen = (props) => {
                                 <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}} >
                                     <QRCode
                                         size={fullWidth * 0.9}
-                                        // value={infoQRCode}
-                                        value="5fb7acc40b20dc3d794a1b68"
+                                        value={infoQRCode}
                                     />
                                 </View>
                                 <Button onPress={() => setSettingQRCode(false)}>Close</Button>
