@@ -2,6 +2,7 @@ import { Types } from '../actions/actionTypes';
 
 const initialState = {
     profile: {
+        _id: '',
         fullName: '',
         codeNumber: '',
         password: '',

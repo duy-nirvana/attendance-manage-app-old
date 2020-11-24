@@ -23,29 +23,29 @@ const Navigator = (props) => {
     const handleScan = (status) => {
         setScaned(status);
     }
-
+    
     useEffect(() => {
         // Fetch the token from storage then navigate to our appropriate place
         const bootstrapAsync = async () => {
-          let userToken;
-    
-          try {
-            userToken = await AsyncStorage.getItem('userToken');
-          } catch (e) {
-            // Restoring token failed
-            console.log('Fail to get token', e);
-          }
-    
-          // After restoring token, we may need to validate it in production apps
-    
-          // This will switch to the App screen or Auth screen and this loading
-          // screen will be unmounted and thrown away.
-          dispatch({ type: 'RESTORE_TOKEN', token: userToken });
+            let userToken;
+            
+            try {
+                userToken = await AsyncStorage.getItem('userToken');
+            } catch (e) {
+                // Restoring token failed
+                console.log('Fail to get token', e);
+            }
+            
+            // After restoring token, we may need to validate it in production apps
+            
+            // This will switch to the App screen or Auth screen and this loading
+            // screen will be unmounted and thrown away.
+            dispatch({ type: 'RESTORE_TOKEN', token: userToken });
         };
-    
+        
         bootstrapAsync();
-      }, []);
-    
+    }, []);
+
     return (
         <>
             {

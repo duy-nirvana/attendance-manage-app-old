@@ -14,6 +14,7 @@ import classApi from '../../api/classApi';
 import subjectApi from '../../api/subjectApi';
 import {Picker} from '@react-native-picker/picker';
 import qrcodeApi from '../../api/qrcodeApi';
+import { useSelector } from 'react-redux';
 
 const fullWidth = Dimensions.get('screen').width;
 const statusBarHeight = StatusBar.currentHeight;
@@ -31,17 +32,26 @@ const ScanScreen = (props) => {
    
 
     // DROPDOWN GENERATE QRCODE
+    const profileUser = useSelector(state => state.profile.profile);;
     const [classes, setClasses] = useState([]);
     const [subject, setSubject] = useState([]);
     const [selectedClasses, setSelectedClasses] = useState([]);
     const [selectedSubject, setSelectedSubject] = useState([]);
     const [selectedTime, setSelectedTime] = useState(30000);
+    const [qrcodeInfo, setQRCodeInfo] = useState("");
 
     const stringQRCode = {
         classes: selectedClasses,
         subject: selectedSubject,
         time: selectedTime
     }
+
+    const historyInfo = {
+        user: profileUser._id,
+        qrcode: qrcodeInfo
+    }
+
+    console.log('historyInfo', historyInfo);
 
     const verifyCreateQRCode = () => {
         Alert.alert(
@@ -121,9 +131,21 @@ const ScanScreen = (props) => {
         setSettingQRCode(false);
     }
 
-    const handleBarCodeScanned = ({ type, data }) => {
-        handleScan(true);
-        alert(`Ban da diem danh thanh cong! ${data}, type: ${type}`);
+    const handleBarCodeScanned = async ({ type, data }) => {
+        try {
+            await qrcodeApi.getById(data).then(res => {
+                setQRCodeInfo(res._id);
+                if (!res.isOutOfDate) {
+                    handleScan(true);
+                    alert(`Ban da diem danh thanh cong! ${data}, type: ${type}`);
+                } else {
+                    alert(`Ban da diem danh that bai! ${data}, type: ${type}`);
+                    handleScan(true);
+                }
+            });
+        } catch (error) {
+            console.log('diem danh that bai', err);
+        }
     };
 
     if (hasPermission === null) {
