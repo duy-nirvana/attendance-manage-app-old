@@ -14,7 +14,8 @@ import classApi from '../../api/classApi';
 import subjectApi from '../../api/subjectApi';
 import {Picker} from '@react-native-picker/picker';
 import qrcodeApi from '../../api/qrcodeApi';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import userApi from '../../api/userApi';
 
 const fullWidth = Dimensions.get('screen').width;
 const statusBarHeight = StatusBar.currentHeight;
@@ -32,7 +33,10 @@ const ScanScreen = (props) => {
    
 
     // DROPDOWN GENERATE QRCODE
-    const profileUser = useSelector(state => state.profile.profile);;
+    const profileUser = useSelector(state => state.profile.profile);
+    const auth = useSelector(state => state.auth);
+    const dispatch = useDispatch();
+
     const [classes, setClasses] = useState([]);
     const [subject, setSubject] = useState([]);
     const [selectedClasses, setSelectedClasses] = useState([]);
@@ -102,6 +106,20 @@ const ScanScreen = (props) => {
             console.log('fail to post qrcode info', );
         }
     }
+
+    // get detail user
+    useEffect(() => {
+        const userProfile = async () => {
+            try {
+                const user = await userApi.getDetail(auth.userToken);
+
+                dispatch({type: 'GET_PROFILE', payload: user});
+            } catch (error) {
+                console.log('Fail to get detail user', error);
+            }
+        }
+        userProfile();
+    }, [])
 
 
     // ---------------------------------------------------------

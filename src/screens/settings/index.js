@@ -11,26 +11,12 @@ const statusBarHeight = StatusBar.currentHeight;
 
 const SettingsScreen = (props) => {
     const profileUser = useSelector(state => state.profile.profile);
-    const auth = useSelector(state => state.auth);
     const dispatch = useDispatch();
 
     const handleSignOut = () => {
         dispatch({ type: 'SIGN_OUT' });
         AsyncStorage.removeItem('userToken');
     } 
-
-    useEffect(() => {
-        const userProfile = async () => {
-            try {
-                const user = await userApi.getDetail(auth.userToken);
-
-                dispatch({type: 'GET_PROFILE', payload: user});
-            } catch (error) {
-                console.log('Fail to get detail user', error);
-            }
-        }
-        userProfile();
-    }, [])
 
     return (
         <View style={{backgroundColor: 'white'}}>
