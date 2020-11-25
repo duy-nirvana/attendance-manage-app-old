@@ -16,6 +16,7 @@ import {Picker} from '@react-native-picker/picker';
 import qrcodeApi from '../../api/qrcodeApi';
 import { useDispatch, useSelector } from 'react-redux';
 import userApi from '../../api/userApi';
+import historyApi from '../../api/historyApi';
 
 const fullWidth = Dimensions.get('screen').width;
 const statusBarHeight = StatusBar.currentHeight;
@@ -43,6 +44,7 @@ const ScanScreen = (props) => {
     const [selectedSubject, setSelectedSubject] = useState([]);
     const [selectedTime, setSelectedTime] = useState(30000);
     const [qrcodeInfo, setQRCodeInfo] = useState("");
+    const [historyInfo, setHistoryInfo] = useState({});
 
     const stringQRCode = {
         classes: selectedClasses,
@@ -50,11 +52,14 @@ const ScanScreen = (props) => {
         time: selectedTime
     }
 
-    const historyInfo = {
-        user: profileUser._id,
-        qrcode: qrcodeInfo
-    }
-
+    useEffect(() => {
+        setHistoryInfo((prevState) => ({
+            ...prevState,
+            qrcode: qrcodeInfo,
+            user: profileUser._id,
+        }))
+    }, [qrcodeInfo, profileUser])
+    
     console.log('historyInfo', historyInfo);
 
     const verifyCreateQRCode = () => {
@@ -152,17 +157,36 @@ const ScanScreen = (props) => {
     const handleBarCodeScanned = async ({ type, data }) => {
         try {
             await qrcodeApi.getById(data).then(res => {
-                setQRCodeInfo(res._id);
-                if (!res.isOutOfDate) {
-                    handleScan(true);
-                    alert(`Ban da diem danh thanh cong! ${data}, type: ${type}`);
-                } else {
-                    alert(`Ban da diem danh that bai! ${data}, type: ${type}`);
-                    handleScan(true);
+                const handleScanQRCode = async () => {
+                    try {
+                        setQRCodeInfo(res._id);
+                        if (!res.isOutOfDate) {
+                            try {
+                                await historyApi.createOne(historyInfo)
+                                .then(() => {
+                                    handleScan(true);
+                                    return alert(`Bạn đã điểm danh thành công!`);
+                                })
+                            } catch (error) {
+                                handleScan(true);
+                                return alert(`Bạn đã điểm danh môn học này!!! ${error}`);
+                            }
+                        } else {
+                            handleScan(true);
+                            return alert(`Mã QR Code đã hết hạn! `);
+                        }
+                    } catch (error) {
+                        handleScan(true);
+                        return alert(`LỖI SCAN`);
+                    }
+                
                 }
+
+                handleScanQRCode()
             });
         } catch (error) {
-            console.log('diem danh that bai', err);
+            handleScan(true);
+            alert('Mã QR Code không hợp lệ!');
         }
     };
 
