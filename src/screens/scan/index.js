@@ -17,12 +17,26 @@ import qrcodeApi from '../../api/qrcodeApi';
 import { useDispatch, useSelector } from 'react-redux';
 import userApi from '../../api/userApi';
 import historyApi from '../../api/historyApi';
+import CameraArea from './components/CameraArea';
 
 const fullWidth = Dimensions.get('screen').width;
 const statusBarHeight = StatusBar.currentHeight;
 
 const ScanScreen = (props) => {
-    const {navigation ,hasOpenCamera, handleCamera, hasScaned, handleScan} = props;
+    // const {navigation ,hasOpenCamera, handleCamera, hasScaned, handleScan} = props;
+    // --- CAMERA AREA ---
+    const [hasOpenCamera, setOpenCamera] = useState(false);
+    const [hasScanned, setScanned] = useState(false);
+
+    const handleCamera = (status) => {
+        setOpenCamera(status);
+    }
+
+    const handleScan = (status) => {
+        setScanned(status);
+    }
+
+    // -----------
     const [hasPermission, setHasPermission] = useState(null);
     const [type, setType] = useState(BarCodeScanner.Constants.Type.back);
 
@@ -135,60 +149,24 @@ const ScanScreen = (props) => {
         })();
     }, []);
 
-    useEffect(() => {
-        const unsubscribe = navigation.addListener('tabPress', () => {
-            handleCamera(false);
-            handleScan(false);
-        });
+    // useEffect(() => {
+    //     const unsubscribe = navigation.addListener('tabPress', () => {
+    //         handleCamera(false);
+    //         handleScan(false);
+    //     });
 
-        return unsubscribe;
-    }, [navigation]);
+    //     return unsubscribe;
+    // }, [navigation]);
 
-    const handleCloseCamera = () => {
-        handleCamera(false);
-        handleScan(false);
-    }
+    // const handleCloseCamera = () => {
+    //     handleCamera(false);
+    //     handleScan(false);
+    // }
 
     const handleCloseQRCode = () => {
         setOpenQRCode(false);
         setSettingQRCode(false);
     }
-
-    const handleBarCodeScanned = async ({ type, data }) => {
-        try {
-            await qrcodeApi.getById(data).then(res => {
-                const handleScanQRCode = async () => {
-                    try {
-                        setQRCodeInfo(res._id);
-                        if (!res.isOutOfDate) {
-                            try {
-                                await historyApi.createOne(historyInfo)
-                                .then(() => {
-                                    handleScan(true);
-                                    return alert(`Bạn đã điểm danh thành công!`);
-                                })
-                            } catch (error) {
-                                handleScan(true);
-                                return alert(`Bạn đã điểm danh môn học này!!! ${error}`);
-                            }
-                        } else {
-                            handleScan(true);
-                            return alert(`Mã QR Code đã hết hạn! `);
-                        }
-                    } catch (error) {
-                        handleScan(true);
-                        return alert(`LỖI SCAN`);
-                    }
-                
-                }
-
-                handleScanQRCode()
-            });
-        } catch (error) {
-            handleScan(true);
-            alert('Mã QR Code không hợp lệ!');
-        }
-    };
 
     if (hasPermission === null) {
         return <Text>Requesting for camera permission</Text>;
@@ -201,7 +179,7 @@ const ScanScreen = (props) => {
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                 <Button 
-                    onPress={() => handleCamera(true)}
+                    onPress={() => setOpenCamera(true)}
                     mode={"contained"}
                     style={{width: fullWidth * 0.9, backgroundColor: '#2d88ff', padding: 10, marginBottom: 20}}
                 >
@@ -220,47 +198,13 @@ const ScanScreen = (props) => {
             <Modal
                 animationType="fade"
                 visible={hasOpenCamera}
-            >   
-                <View style={{flex: 1}}>
-                    <Camera
-                        onBarCodeScanned={hasScaned ? undefined : handleBarCodeScanned}
-                        flashMode={Camera.Constants.FlashMode.on}
-                        barCodeScannerSettings={{
-                            barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
-                        }}
-                        style={[StyleSheet.absoluteFill]}
-                    >
-                        <View
-                            style={{
-                                flex: 1,
-                                backgroundColor: 'transparent',
-                                flexDirection: 'row',
-                            }}>
-                            <TouchableOpacity
-                                style={{
-                                    flex: 1,
-                                    alignItems: 'flex-end',
-                                }}
-                                onPress={() => {
-                                    setType(
-                                        type === BarCodeScanner.Constants.Type.back
-                                            ? BarCodeScanner.Constants.Type.front
-                                        : BarCodeScanner.Constants.Type.back
-                                    );
-                                }}>
-                            </TouchableOpacity>
-                        </View>
-                    </Camera>
-                    <View style={{flex: 1, justifyContent: 'flex-start', alignItems: 'flex-end', marginTop: 10 + statusBarHeight, marginLeft: 25, marginRight: 25}}>
-                        <MaterialCommunityIcons name="close" size={50} color="#fff" onPress={() => handleCloseCamera()} />
-                    </View>
-                    {
-                        hasScaned && 
-                        <View style={{flex:1, justifyContent: 'flex-end', alignItems: 'center', marginBottom: 25}}>
-                            <MaterialCommunityIcons name="reload" size={80} color="#fff" onPress={() => handleScan(false)} />
-                        </View>
-                    }
-                </View>
+            > 
+                <CameraArea 
+                    hasOpenCamera={hasOpenCamera} 
+                    hasScanned={hasScanned}
+                    handleCamera={handleCamera}
+                    handleScan={handleScan}
+                />
             </Modal>
 
             {/* QRCODE area scan modal*/}

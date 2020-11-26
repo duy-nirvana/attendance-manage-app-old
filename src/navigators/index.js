@@ -13,16 +13,16 @@ const Tab = createMaterialBottomTabNavigator();
 const Navigator = (props) => {
     const dispatch = useDispatch();
     const auth = useSelector(state => state.auth);
-    const [hasOpenCamera, setOpenCamera] = useState(false);
-    const [hasScaned, setScaned] = useState(false);
+    // const [hasOpenCamera, setOpenCamera] = useState(false);
+    // const [hasScaned, setScaned] = useState(false);
 
-    const handleCamera = (status) => {
-        setOpenCamera(status);
-    }
+    // const handleCamera = (status) => {
+    //     setOpenCamera(status);
+    // }
 
-    const handleScan = (status) => {
-        setScaned(status);
-    }
+    // const handleScan = (status) => {
+    //     setScaned(status);
+    // }
     
     useEffect(() => {
         // Fetch the token from storage then navigate to our appropriate place
@@ -59,7 +59,7 @@ const Navigator = (props) => {
                     >
                         <Tab.Screen 
                             name="Scan"
-                            children={(props) => <ScanScreen {...props} handleCamera={handleCamera} hasOpenCamera={hasOpenCamera} hasScaned={hasScaned} handleScan={handleScan} />}
+                            children={(props) => <ScanScreen />}
                             options={{
                                 tabBarLabel: 'Scan',
                                 tabBarIcon: ({ color }) => (
@@ -69,7 +69,7 @@ const Navigator = (props) => {
                         />
                         <Tab.Screen 
                             name="Settings"
-                            children={(props) => <SettingsScreen {...props} handleCamera={handleCamera} handleScan={handleScan} />}
+                            children={(props) => <SettingsScreen />}
                             options={{
                                 tabBarLabel: 'Settings',
                                 tabBarIcon: ({ color }) => (
