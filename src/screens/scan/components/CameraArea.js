@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Modal, StyleSheet, StatusBar } from 'react-native';
+import { useSelector } from 'react-redux';
 
 import { Camera } from 'expo-camera';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -12,11 +13,26 @@ import historyApi from '../../../api/historyApi';
 const statusBarHeight = StatusBar.currentHeight;
 
 const CameraArea = (props) => {
-    const {hasOpenCamera, hasScanned, handleCamera, handleScan} = props;
+    const {handleOpenCamera} = props;
+    const profileUser = useSelector(state => state.profile.profile);
+    const [type, setType] = useState(BarCodeScanner.Constants.Type.back);
+    const [hasScanned, setScanned] = useState(false);
+    const [qrcodeID, setQRCodeID] = useState("");
+    const [historyInfo, setHistoryInfo] = useState({});
+
+    useEffect(() => {
+        setHistoryInfo((prevState) => ({
+            ...prevState,
+            qrcode: qrcodeID,
+            user: profileUser._id,
+        }))
+    }, [qrcodeID, profileUser])
+
+    console.log('history info', historyInfo)
 
     const handleCloseCamera = () => {
-        handleCamera(false);
-        handleScan(false);
+        handleOpenCamera(false);
+        setScanned(false);
     }
 
     const handleBarCodeScanned = async ({ type, data }) => {
@@ -24,26 +40,26 @@ const CameraArea = (props) => {
             await qrcodeApi.getById(data).then(res => {
                 const handleScanQRCode = async () => {
                     try {
-                        setQRCodeInfo(res._id);
+                        setQRCodeID(res._id);
                         if (!res.isOutOfDate) {
                             try {
                                 await historyApi.createOne(historyInfo)
                                 .then(() => {
-                                    handleScan(true);
+                                    setScanned(true);
                                     return alert(`Bạn đã điểm danh thành công!`);
                                 })
                                 .catch((error) => {
-                                    handleScan(true);
+                                    setScanned(true);
                                     return alert(`Bạn đã điểm danh môn học này!!! ${error}`);
                                 })
                             } catch (error) {
                             }
                         } else {
-                            handleScan(true);
+                            setScanned(true);
                             return alert(`Mã QR Code đã hết hạn! `);
                         }
                     } catch (error) {
-                        handleScan(true);
+                        setScanned(true);
                         return alert(`LỖI SCAN`);
                     }
                 }
@@ -51,7 +67,7 @@ const CameraArea = (props) => {
                 handleScanQRCode()
             });
         } catch (error) {
-            handleScan(true);
+            setScanned(true);
             alert('Mã QR Code không hợp lệ!');
         }
     };
@@ -60,7 +76,6 @@ const CameraArea = (props) => {
         <View style={{flex: 1}}>
             <Camera
                 onBarCodeScanned={hasScanned ? undefined : handleBarCodeScanned}
-                //flashMode={Camera.Constants.FlashMode.on}
                 barCodeScannerSettings={{
                     barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
                 }}
@@ -93,7 +108,7 @@ const CameraArea = (props) => {
             {
                 hasScanned && 
                 <View style={{flex:1, justifyContent: 'flex-end', alignItems: 'center', marginBottom: 25}}>
-                    <MaterialCommunityIcons name="reload" size={80} color="#fff" onPress={() => handleScan(false)} />
+                    <MaterialCommunityIcons name="reload" size={80} color="#fff" onPress={() => setScanned(false)} />
                 </View>
             }
         </View>

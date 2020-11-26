@@ -26,15 +26,11 @@ const ScanScreen = (props) => {
     // const {navigation ,hasOpenCamera, handleCamera, hasScaned, handleScan} = props;
     // --- CAMERA AREA ---
     const [hasOpenCamera, setOpenCamera] = useState(false);
-    const [hasScanned, setScanned] = useState(false);
 
-    const handleCamera = (status) => {
+    const handleOpenCamera = (status) => {
         setOpenCamera(status);
     }
 
-    const handleScan = (status) => {
-        setScanned(status);
-    }
 
     // -----------
     const [hasPermission, setHasPermission] = useState(null);
@@ -57,25 +53,13 @@ const ScanScreen = (props) => {
     const [selectedClasses, setSelectedClasses] = useState([]);
     const [selectedSubject, setSelectedSubject] = useState([]);
     const [selectedTime, setSelectedTime] = useState(30000);
-    const [qrcodeInfo, setQRCodeInfo] = useState("");
-    const [historyInfo, setHistoryInfo] = useState({});
 
     const stringQRCode = {
         classes: selectedClasses,
         subject: selectedSubject,
         time: selectedTime
     }
-
-    useEffect(() => {
-        setHistoryInfo((prevState) => ({
-            ...prevState,
-            qrcode: qrcodeInfo,
-            user: profileUser._id,
-        }))
-    }, [qrcodeInfo, profileUser])
     
-    console.log('historyInfo', historyInfo);
-
     const verifyCreateQRCode = () => {
         Alert.alert(
             "QRCODE",
@@ -113,7 +97,6 @@ const ScanScreen = (props) => {
     }, [])
 
     const generateQRCode = () => {
-        // setInfoQRCode(JSON.stringify(stringQRCode));
         try {
             qrcodeApi.createOne(stringQRCode)
             .then((data) => {
@@ -158,11 +141,6 @@ const ScanScreen = (props) => {
     //     return unsubscribe;
     // }, [navigation]);
 
-    // const handleCloseCamera = () => {
-    //     handleCamera(false);
-    //     handleScan(false);
-    // }
-
     const handleCloseQRCode = () => {
         setOpenQRCode(false);
         setSettingQRCode(false);
@@ -200,10 +178,7 @@ const ScanScreen = (props) => {
                 visible={hasOpenCamera}
             > 
                 <CameraArea 
-                    hasOpenCamera={hasOpenCamera} 
-                    hasScanned={hasScanned}
-                    handleCamera={handleCamera}
-                    handleScan={handleScan}
+                    handleOpenCamera={handleOpenCamera}
                 />
             </Modal>
 
