@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Modal, StyleSheet, StatusBar } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Camera } from 'expo-camera';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -14,62 +14,67 @@ const statusBarHeight = StatusBar.currentHeight;
 
 const CameraArea = (props) => {
     const {handleOpenCamera} = props;
+    const qrcodeInfo = useSelector(state => state.qrcode.qrcode);
     const profileUser = useSelector(state => state.profile.profile);
+    const dispatch = useDispatch();
+
     const [type, setType] = useState(BarCodeScanner.Constants.Type.back);
     const [hasScanned, setScanned] = useState(false);
-    const [qrcodeID, setQRCodeID] = useState("");
+    // const [qrcodeID, setQRCodeID] = useState("");
+    // const [qrcodeInfo, setQRCodeInfo] = useState({});
     const [historyInfo, setHistoryInfo] = useState({});
 
     useEffect(() => {
-        setHistoryInfo((prevState) => ({
-            ...prevState,
-            qrcode: qrcodeID,
+        setHistoryInfo({
+            qrcode: qrcodeInfo._id,
             user: profileUser._id,
-        }))
-    }, [qrcodeID, profileUser])
-
-    console.log('history info', historyInfo)
+        })
+    }, [qrcodeInfo])
 
     const handleCloseCamera = () => {
         handleOpenCamera(false);
         setScanned(false);
     }
 
-    const handleBarCodeScanned = async ({ type, data }) => {
-        try {
-            await qrcodeApi.getById(data).then(res => {
-                const handleScanQRCode = async () => {
-                    try {
-                        setQRCodeID(res._id);
-                        if (!res.isOutOfDate) {
-                            try {
-                                await historyApi.createOne(historyInfo)
-                                .then(() => {
-                                    setScanned(true);
-                                    return alert(`Bạn đã điểm danh thành công!`);
-                                })
-                                .catch((error) => {
-                                    setScanned(true);
-                                    return alert(`Bạn đã điểm danh môn học này!!! ${error}`);
-                                })
-                            } catch (error) {
-                            }
-                        } else {
-                            setScanned(true);
-                            return alert(`Mã QR Code đã hết hạn! `);
+    const handleBarCodeScanned = ({ type, data }) => {
+        const handleScan = async () => {
+            try {
+                console.log('1. get id');
+                await qrcodeApi.getById(data)
+                .then(res => {
+                    dispatch({type: 'UPDATE_QRCODE', payload: res})
+                    console.log('2. set qrcode info');
+                    console.log('2. qrcode info', qrcodeInfo)
+                })
+                .then(() => {
+                    if (qrcodeInfo.isOutOfDate === false) {
+                        const checkScanQRCode = async () => {
+                            console.log('3. create new');
+                            await historyApi.createOne(historyInfo)
+                            .then(() => {
+                                setScanned(true);
+                                alert(`Bạn đã điểm danh thành công!`);
+                                return;
+                            })
+                            .catch((error) => {
+                                setScanned(true);
+                                alert(`Bạn đã điểm danh môn học này!!!`);
+                            })
                         }
-                    } catch (error) {
+                        
+                        checkScanQRCode();
+                    } else {
                         setScanned(true);
-                        return alert(`LỖI SCAN`);
-                    }
-                }
-
-                handleScanQRCode()
-            });
-        } catch (error) {
-            setScanned(true);
-            alert('Mã QR Code không hợp lệ!');
+                        return alert(`Mã QR Code đã hết hạn! `);
+                    }})
+                
+            } catch (error) {
+                setScanned(true);
+                alert('Ma QRCODE KHONG HOP LE', error)
+            }
         }
+
+        handleScan();
     };
     
     return (  
