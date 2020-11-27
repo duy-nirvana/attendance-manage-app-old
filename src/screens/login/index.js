@@ -25,9 +25,14 @@ const LoginScreen = (props) => {
 
     const handleOnPress = async () => {
         try {
-            const loginInfo = await authApi.login(valueForm);
-            AsyncStorage.setItem('userToken', loginInfo.token); 
-            dispatch({ type: 'SIGN_IN', token: loginInfo.token });
+            await authApi.login(valueForm)
+            .then((res) => {
+                AsyncStorage.setItem('userToken', res.token); 
+                dispatch({ type: 'SIGN_IN', token: res.token });
+            })
+            .catch(err => {
+                console.log('dang nhap that bai!', JSON.parse(err.response.request._response));
+            });
         } catch (error) {
             console.log('Fail to login', error);
         }
