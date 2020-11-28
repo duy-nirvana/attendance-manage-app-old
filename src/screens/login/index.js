@@ -14,7 +14,6 @@ const LoginScreen = (props) => {
     const [codeNumberValue, setCodeNumber] = useState('');
     const [passwordValue, setPasswordValue] = useState(''); 
     const [valueForm, setValueForm] = useState({});
-    // const [errors, setErrors] = useState("");
     
     useEffect(() => {
         setValueForm((prevState) => ({
@@ -41,8 +40,8 @@ const LoginScreen = (props) => {
                 dispatch({ type: 'SIGN_IN', token: res.token });
             })
             .catch(err => {
-                console.log('dang nhap that bai!', JSON.parse(err.response.request._response));
-                Toast.show(`${handleChangeErrorsToString(JSON.parse(err.response.request._response)) }`);
+                const errors = JSON.parse(err.response.request._response);
+                Toast.show(`${handleChangeErrorsToString(errors)}`);
             });
         } catch (error) {
             console.log('Fail to login', error);
