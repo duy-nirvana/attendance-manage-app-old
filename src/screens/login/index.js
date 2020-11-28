@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {View, Text, StatusBar, Dimensions} from 'react-native';
 import {TextInput, Title, Button} from 'react-native-paper';
+import { Toast } from 'react-native-root-toaster';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
 import authApi from '../../api/authApi';
@@ -13,6 +14,7 @@ const LoginScreen = (props) => {
     const [codeNumberValue, setCodeNumber] = useState('');
     const [passwordValue, setPasswordValue] = useState(''); 
     const [valueForm, setValueForm] = useState({});
+    // const [errors, setErrors] = useState("");
     
     useEffect(() => {
         setValueForm((prevState) => ({
@@ -23,6 +25,14 @@ const LoginScreen = (props) => {
 
     }, [codeNumberValue, passwordValue])
 
+    const handleChangeErrorsToString = (errors) => {
+        let errorsString = "";
+        errors.errors.map((err) => {
+            errorsString += `${err.msg} \n`
+        })
+        return errorsString;
+    }
+
     const handleOnPress = async () => {
         try {
             await authApi.login(valueForm)
@@ -32,6 +42,7 @@ const LoginScreen = (props) => {
             })
             .catch(err => {
                 console.log('dang nhap that bai!', JSON.parse(err.response.request._response));
+                Toast.show(`${handleChangeErrorsToString(JSON.parse(err.response.request._response)) }`);
             });
         } catch (error) {
             console.log('Fail to login', error);
