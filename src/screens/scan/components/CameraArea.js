@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Modal, StyleSheet, StatusBar } from 'react-native';
+import { ActivityIndicator } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Camera } from 'expo-camera';
@@ -21,6 +22,7 @@ const CameraArea = (props) => {
     const [type, setType] = useState(BarCodeScanner.Constants.Type.back);
     const [hasScanned, setScanned] = useState(false);
     const [historyInfo, setHistoryInfo] = useState({});
+    const [isLoading, setLoading] = useState(false);
 
     const handleCloseCamera = () => {
         handleOpenCamera(false);
@@ -30,15 +32,18 @@ const CameraArea = (props) => {
     const handleBarCodeScanned = ({ type, data }) => {
         const handleScan = async () => {
             try {
+                setLoading(true);
                 await qrcodeApi.getById(data)
                 .then(res => {
+                    setLoading(false);
                     dispatch({type: 'UPDATE_QRCODE', payload: res })
                     return res;
                 })
                 
             } catch (error) {
+                setLoading(false);
                 setScanned(true);
-                alert('Ma QRCODE KHONG HOP LE', error)
+                alert('Mã QR Code không hợp lệ', error)
             }
         }
 
@@ -54,11 +59,13 @@ const CameraArea = (props) => {
                         user: profileUser._id,
                     })
                         .then(() => {
+                            setLoading(false);
                             setScanned(true);
                             alert(`Bạn đã điểm danh thành công!`);
                             return;
                         })
                         .catch((error) => {
+                            setLoading(false);
                             setScanned(true);
                             alert(`Bạn đã điểm danh môn học này!!!`);
                         })
@@ -66,6 +73,7 @@ const CameraArea = (props) => {
                 
                 checkScanQRCode();
             } else {
+                setLoading(false);
                 setScanned(true);
                 return alert(`Mã QR Code đã hết hạn! `);
             }
@@ -102,7 +110,17 @@ const CameraArea = (props) => {
                     </TouchableOpacity>
                 </View>
             </Camera>
-            <View style={{flex: 1, justifyContent: 'flex-start', alignItems: 'flex-end', marginTop: 10 + statusBarHeight, marginLeft: 25, marginRight: 25}}>
+            
+            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: 10 + statusBarHeight, marginLeft: 25, marginRight: 25}}>
+                {
+                        isLoading ? 
+                        <ActivityIndicator 
+                            animating={true} 
+                            color="#fff" 
+                            size='large'
+                        /> :
+                        <View style={{flex: 1}}></View>
+                }
                 <MaterialCommunityIcons name="close" size={50} color="#fff" onPress={() => handleCloseCamera()} />
             </View>
             {
