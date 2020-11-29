@@ -20,16 +20,7 @@ const CameraArea = (props) => {
 
     const [type, setType] = useState(BarCodeScanner.Constants.Type.back);
     const [hasScanned, setScanned] = useState(false);
-    // const [qrcodeID, setQRCodeID] = useState("");
-    // const [qrcodeInfo, setQRCodeInfo] = useState({});
     const [historyInfo, setHistoryInfo] = useState({});
-
-    useEffect(() => {
-        setHistoryInfo({
-            qrcode: qrcodeInfo._id,
-            user: profileUser._id,
-        })
-    }, [qrcodeInfo])
 
     const handleCloseCamera = () => {
         handleOpenCamera(false);
@@ -39,34 +30,11 @@ const CameraArea = (props) => {
     const handleBarCodeScanned = ({ type, data }) => {
         const handleScan = async () => {
             try {
-                console.log('1. get id');
                 await qrcodeApi.getById(data)
                 .then(res => {
-                    dispatch({type: 'UPDATE_QRCODE', payload: res})
-                    console.log('2. set qrcode info');
-                    console.log('2. qrcode info', qrcodeInfo)
+                    dispatch({type: 'UPDATE_QRCODE', payload: res })
+                    return res;
                 })
-                .then(() => {
-                    if (qrcodeInfo.isOutOfDate === false) {
-                        const checkScanQRCode = async () => {
-                            console.log('3. create new');
-                            await historyApi.createOne(historyInfo)
-                            .then(() => {
-                                setScanned(true);
-                                alert(`Bạn đã điểm danh thành công!`);
-                                return;
-                            })
-                            .catch((error) => {
-                                setScanned(true);
-                                alert(`Bạn đã điểm danh môn học này!!!`);
-                            })
-                        }
-                        
-                        checkScanQRCode();
-                    } else {
-                        setScanned(true);
-                        return alert(`Mã QR Code đã hết hạn! `);
-                    }})
                 
             } catch (error) {
                 setScanned(true);
@@ -76,6 +44,33 @@ const CameraArea = (props) => {
 
         handleScan();
     };
+
+    useEffect(() => {
+        if (qrcodeInfo) {
+            if (qrcodeInfo.isOutOfDate === false) {
+                const checkScanQRCode = async () => {
+                    await historyApi.createOne({
+                        qrcode: qrcodeInfo._id,
+                        user: profileUser._id,
+                    })
+                        .then(() => {
+                            setScanned(true);
+                            alert(`Bạn đã điểm danh thành công!`);
+                            return;
+                        })
+                        .catch((error) => {
+                            setScanned(true);
+                            alert(`Bạn đã điểm danh môn học này!!!`);
+                        })
+                }
+                
+                checkScanQRCode();
+            } else {
+                setScanned(true);
+                return alert(`Mã QR Code đã hết hạn! `);
+            }
+        } 
+    }, [qrcodeInfo])
     
     return (  
         <View style={{flex: 1}}>

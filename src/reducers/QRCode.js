@@ -1,13 +1,7 @@
 import {Types} from '../actions/actionTypes';
 
 const initialState = {
-    qrcode: {
-        _id: '',
-        classes: [],
-        subject: [],
-        isOutOfDate: undefined,
-        time: 30000
-    }
+    qrcode: null
 }
 
 const qrcodeReducer = (state = initialState, action) => {
