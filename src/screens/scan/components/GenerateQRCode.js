@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Modal, Text, Dimensions, StyleSheet, StatusBar, SafeAreaView, Alert, ScrollView } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button, ActivityIndicator } from 'react-native-paper';
 import QRCode from 'react-native-qrcode-svg';
 
 import classApi from '../../../api/classApi';
@@ -22,6 +22,7 @@ const GenerateQRCode = (props) => {
     const [selectedSubject, setSelectedSubject] = useState([]);
     const [selectedTime, setSelectedTime] = useState(30000);
     const [infoQRCode, setInfoQRCode] = useState("");
+    const [isLoading, setLoading] = useState(false);
     
     const stringQRCode = {
         classes: selectedClasses,
@@ -67,13 +68,16 @@ const GenerateQRCode = (props) => {
 
     const generateQRCode = () => {
         try {
+            setLoading(true);
             qrcodeApi.createOne(stringQRCode)
             .then((data) => {
+                setLoading(false);
                 setInfoQRCode(data._id);
                 setSettingQRCode(true);
                 qrcodeApi.updateById(data._id);
             })
         } catch (error) {
+            setLoading(false);
             console.log('fail to post qrcode info', );
         }
     }
@@ -89,7 +93,7 @@ const GenerateQRCode = (props) => {
                     <MultiSelect
                         items={classes}
                         uniqueKey="_id"
-                        ref={(component) => { multiSelect = component }}
+                        //ref={(component) => { multiSelect = component }}
                         onSelectedItemsChange={(item) => setSelectedClasses(item)}
                         selectedItems={selectedClasses}
                         selectText="Chọn lớp học"
@@ -112,7 +116,7 @@ const GenerateQRCode = (props) => {
                         single={true}
                         items={subject}
                         uniqueKey="_id"
-                        ref={(component) => { multiSelect = component }}
+                        //ref={(component) => { multiSelect = component }}
                         onSelectedItemsChange={(item) => setSelectedSubject(item)}
                         selectedItems={selectedSubject}
                         selectText="Chọn môn học"
@@ -142,6 +146,14 @@ const GenerateQRCode = (props) => {
                         <Picker.Item label="5 phút" value={300000} />
                     </Picker>
                     
+                    {
+                        isLoading && 
+                        <ActivityIndicator 
+                            animating={true} 
+                            color="#000" 
+                        />
+                    }
+
                     <Button 
                         mode="outlined" 
                         color="white" 
