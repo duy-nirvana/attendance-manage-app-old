@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {View, Text, StatusBar, Dimensions} from 'react-native';
-import {TextInput, Title, Button} from 'react-native-paper';
+import {TextInput, Title, Button, ActivityIndicator} from 'react-native-paper';
 import { Toast } from 'react-native-root-toaster';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,6 +14,7 @@ const LoginScreen = (props) => {
     const [codeNumberValue, setCodeNumber] = useState('');
     const [passwordValue, setPasswordValue] = useState(''); 
     const [valueForm, setValueForm] = useState({});
+    const [isLoading, setLoading] = useState(false);
     
     useEffect(() => {
         setValueForm((prevState) => ({
@@ -34,12 +35,15 @@ const LoginScreen = (props) => {
 
     const handleOnPress = async () => {
         try {
+            setLoading(true);
             await authApi.login(valueForm)
             .then((res) => {
+                setLoading(false);
                 AsyncStorage.setItem('userToken', res.token); 
                 dispatch({ type: 'SIGN_IN', token: res.token });
             })
             .catch(err => {
+                setLoading(false);
                 const errors = JSON.parse(err.response.request._response);
                 Toast.show(`${handleChangeErrorsToString(errors)}`);
             });
@@ -51,6 +55,7 @@ const LoginScreen = (props) => {
     return (
         <View style={{flex: 1, marginTop: statusBarHeight + 100, alignItems: "center" }}>
             <Title style={{fontSize: 25, marginBottom: 10 }} >APP ĐIỂM DANH</Title>
+
             <TextInput 
                 label="MSSV"
                 mode="outlined"
@@ -76,6 +81,14 @@ const LoginScreen = (props) => {
             > 
                 ĐĂNG NHẬP
             </Button>
+            {
+                isLoading && 
+                <ActivityIndicator 
+                    animating={true} 
+                    color="#000" 
+                    style={{marginTop: 10}}
+                />
+            }
         </View>
     )
 }
