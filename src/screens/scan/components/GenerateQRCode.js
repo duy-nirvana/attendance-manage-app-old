@@ -139,7 +139,7 @@ const GenerateQRCode = (props) => {
                         itemTextColor="#aaa"
                         displayKey="name"
                         searchInputStyle={{ color: '#CCC' }}
-                        tagContainerStyle={{backgroundColor: "#2d88ff", width: fullWidth * 0.4}}
+                        tagContainerStyle={{backgroundColor: "#2d88ff", width: fullWidth * 0.35}}
                         submitButtonColor="navy"
                         hideSubmitButton={true}
                         fixedHeight={true}

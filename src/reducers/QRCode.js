@@ -11,6 +11,11 @@ const qrcodeReducer = (state = initialState, action) => {
                 ...state,
                 qrcode: action.payload
             }
+        case Types.DELETE_QRCODE:
+            return {
+                ...state,
+                qrcode: null
+            }
         default: {
             return state;
         }

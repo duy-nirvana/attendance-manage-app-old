@@ -18,6 +18,7 @@ const CameraArea = (props) => {
     const qrcodeInfo = useSelector(state => state.qrcode.qrcode);
     const profileUser = useSelector(state => state.profile.profile);
     const dispatch = useDispatch();
+    const userClassID = profileUser.classroom._id;
 
     const [type, setType] = useState(BarCodeScanner.Constants.Type.back);
     const [hasScanned, setScanned] = useState(false);
@@ -44,6 +45,7 @@ const CameraArea = (props) => {
                 setLoading(false);
                 setScanned(true);
                 alert('Mã QR Code không hợp lệ', error)
+                dispatch({type: 'DELETE_QRCODE'})
             }
         }
 
@@ -54,27 +56,39 @@ const CameraArea = (props) => {
         if (qrcodeInfo) {
             if (qrcodeInfo.isOutOfDate === false) {
                 const checkScanQRCode = async () => {
-                    await historyApi.createOne({
-                        qrcode: qrcodeInfo._id,
-                        user: profileUser._id,
-                    })
-                        .then(() => {
-                            setLoading(false);
-                            setScanned(true);
-                            alert(`Bạn đã điểm danh thành công!`);
-                            return;
+                    if (qrcodeInfo.classes.includes(userClassID) === false) {
+                        setLoading(false);
+                        setScanned(true);
+                        alert(`Mã QR code này không có lớp học của bạn!!!`);
+                        dispatch({type: 'DELETE_QRCODE'})
+                        return;
+                    } else {
+                        await historyApi.createOne({
+                            qrcode: qrcodeInfo._id,
+                            user: profileUser._id,
                         })
-                        .catch((error) => {
-                            setLoading(false);
-                            setScanned(true);
-                            alert(`Bạn đã điểm danh môn học này!!!`);
-                        })
+                            .then(() => {
+                                setLoading(false);
+                                setScanned(true);
+                                alert(`Bạn đã điểm danh thành công!`);
+                                dispatch({type: 'DELETE_QRCODE'});
+                                return;
+                            })
+                            .catch((error) => {
+                                setLoading(false);
+                                setScanned(true);
+                                alert(`Bạn đã điểm danh môn học này!!!`);
+                                dispatch({type: 'DELETE_QRCODE'});
+                                return
+                            })
+                    }
                 }
-                
+
                 checkScanQRCode();
             } else {
                 setLoading(false);
                 setScanned(true);
+                dispatch({type: 'DELETE_QRCODE'})
                 return alert(`Mã QR Code đã hết hạn! `);
             }
         } 
