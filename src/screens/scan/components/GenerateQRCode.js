@@ -29,6 +29,39 @@ const GenerateQRCode = (props) => {
         subject: selectedSubject,
         time: selectedTime
     }
+
+    const checkInfoIsNotEmpty = () => {
+        if (stringQRCode.classes.length === 0) {
+            Alert.alert(
+                "QRCODE",
+                "Lớp học không được để trống",
+                [
+                  {
+                    text: "OK",
+                  },
+                ],
+                { cancelable: false }
+            );
+        } 
+
+        if (stringQRCode.subject.length === 0) {
+            Alert.alert(
+                "QRCODE",
+                "Môn học không được để trống",
+                [
+                  {
+                    text: "OK",
+                  },
+                ],
+                { cancelable: false }
+            );
+        } 
+
+        if (stringQRCode.classes.length > 0 && stringQRCode.subject.length > 0) {
+            verifyCreateQRCode();
+        }
+        
+    }
     
     const verifyCreateQRCode = () => {
         Alert.alert(
@@ -146,19 +179,13 @@ const GenerateQRCode = (props) => {
                         <Picker.Item label="5 phút" value={300000} />
                     </Picker>
                     
-                    {
-                        isLoading && 
-                        <ActivityIndicator 
-                            animating={true} 
-                            color="#000" 
-                        />
-                    }
+                    
 
                     <Button 
                         mode="outlined" 
                         color="white" 
                         style={{width: fullWidth * .9,  backgroundColor: 'navy', padding: 10, marginTop: 30}}
-                        onPress={verifyCreateQRCode}
+                        onPress={checkInfoIsNotEmpty}
                     > 
                         Tạo mã QR Code
                     </Button>
@@ -168,10 +195,18 @@ const GenerateQRCode = (props) => {
                     <Modal visible={hasSettingQRCode}
                     >
                         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}} >
-                            <QRCode
-                                size={fullWidth * 0.9}
-                                value={infoQRCode}
-                            />
+                            {
+                                isLoading ? 
+                                <ActivityIndicator 
+                                    animating={true} 
+                                    color="#000" 
+                                />
+                                :
+                                <QRCode
+                                    size={fullWidth * 0.9}
+                                    value={infoQRCode}
+                                />
+                            }
                         </View>
                         <Button onPress={() => setSettingQRCode(false)}>Close</Button>
                     </Modal>
