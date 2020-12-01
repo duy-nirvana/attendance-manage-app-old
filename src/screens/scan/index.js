@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import userApi from '../../api/userApi';
 import CameraArea from './components/CameraArea';
 import GenerateQRCode from './components/GenerateQRCode';
+import HistoryArea from './components/HistoryArea';
 
 const fullWidth = Dimensions.get('screen').width;
 
@@ -26,6 +27,13 @@ const ScanScreen = (props) => {
     
     const handleOpenQRCode = (status) => {
         setOpenQRCode(status);
+    }
+
+    // History area
+    const [hasOpenHistory, setOpenHistory] = useState(false);
+
+    const handleOpenHistory = (status) => {
+        setOpenHistory(status);
     }
     
     // get detail user
@@ -74,9 +82,16 @@ const ScanScreen = (props) => {
                 <Button 
                     onPress={() => setOpenQRCode(true)}
                     mode={"contained"}
-                    style={{width: fullWidth * 0.9, backgroundColor: '#2d88ff', padding: 10}}
+                    style={{width: fullWidth * 0.9, backgroundColor: '#2d88ff', padding: 10, marginBottom: 20}}
                 >
                     Generate QRCode
+                </Button>
+                <Button 
+                    onPress={() => setOpenHistory(true)}
+                    mode={"contained"}
+                    style={{width: fullWidth * 0.9, backgroundColor: '#2d88ff', padding: 10}}
+                >
+                    Lịch sử
                 </Button>
             </View>
 
@@ -98,6 +113,16 @@ const ScanScreen = (props) => {
                 <GenerateQRCode 
                     handleOpenQRCode={handleOpenQRCode}
                 />
+            </Modal>
+
+            {/* HISTORY AREA*/}
+            <Modal
+                animationType="slide"
+                visible={hasOpenHistory}
+            >   
+                <HistoryArea
+                    handleOpenHistory={handleOpenHistory}
+                /> 
             </Modal>
         </View>
     )

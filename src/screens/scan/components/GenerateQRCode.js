@@ -121,7 +121,7 @@ const GenerateQRCode = (props) => {
                 <MaterialCommunityIcons name="close" size={50} color="#000" onPress={() => handleOpenQRCode(false)} />
             </View>
             <SafeAreaView style={{flex:1, alignItems: "center"}}>
-                <View>
+                <View style={{flex: 1, marginLeft: 20, marginRight: 20}}>
                     <Text style={{marginBottom: 5, marginTop: 20, textAlign: 'center'}}>LỚP HỌC</Text>
                     <MultiSelect
                         items={classes}
