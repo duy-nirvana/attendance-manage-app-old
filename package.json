@@ -20,6 +20,7 @@
     "expo-barcode-scanner": "~9.0.0",
     "expo-camera": "~9.0.0",
     "expo-status-bar": "~1.0.2",
+    "moment-timezone": "^0.5.32",
     "query-string": "^6.13.7",
     "react": "16.13.1",
     "react-dom": "16.13.1",

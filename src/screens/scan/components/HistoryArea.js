@@ -3,8 +3,12 @@ import {View, Text, Dimensions} from 'react-native';
 import { Button, ActivityIndicator, Divider, Title, Chip, Subheading } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import historyApi from '../../../api/historyApi';
+import moment from 'moment-timezone';
+import 'moment/locale/vi'  // without this line it didn't work
 
 const fullWidth = Dimensions.get("screen").width;
+
+var time = moment('2020-12-01T16:20:43.010Z');
 
 const HistoryArea = (props) => {
     const {handleOpenHistory} = props;
@@ -21,9 +25,9 @@ const HistoryArea = (props) => {
                 setHistoryInfo(res);
                 setLoading(false);
             })
-
         }
 
+        console.log('moment: ', moment('2020-12-01T16:20:43.010Z').tz('Asia/Ho_Chi_Minh').format('HH:mm:ss | dddd DD/MM/YYYY') )
         fetchHistory();
     }, [])
 
@@ -72,7 +76,7 @@ const HistoryArea = (props) => {
                                         ))
                                     }
                                 </View>
-                                <Subheading>Ngày điểm danh: {history.createdAt}</Subheading>    
+                                <Subheading>Ngày điểm danh: {moment(history.createdAt).tz('Asia/Ho_Chi_Minh').format('HH:mm:ss, dddd DD/MM/YYYY')}</Subheading>    
                                 <Divider style={{marginTop: 15}}/>
                             </View>
                             
