@@ -118,7 +118,7 @@ const GenerateQRCode = (props) => {
     return (
         <View style={{flex: 1}}>
             <View style={{justifyContent: 'flex-start', alignItems: 'flex-end'}}>
-                <MaterialCommunityIcons name="close" size={50} color="#000" onPress={() => handleOpenQRCode(false)} />
+                <MaterialCommunityIcons name="close" size={40} color="#000" onPress={() => handleOpenQRCode(false)} />
             </View>
             <SafeAreaView style={{flex:1, alignItems: "center"}}>
                 <View style={{flex: 1, marginLeft: 20, marginRight: 20}}>

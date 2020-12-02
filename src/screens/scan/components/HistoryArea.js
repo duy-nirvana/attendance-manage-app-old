@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import {View, Text, Dimensions} from 'react-native';
+import {View, Text, Dimensions, ScrollView} from 'react-native';
 import { Button, ActivityIndicator, Divider, Title, Chip, Subheading } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import historyApi from '../../../api/historyApi';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import moment from 'moment-timezone';
-import 'moment/locale/vi'  // without this line it didn't work
+import 'moment/locale/vi';  // without this line it didn't work
 
 const fullWidth = Dimensions.get("screen").width;
-
-var time = moment('2020-12-01T16:20:43.010Z');
 
 const HistoryArea = (props) => {
     const {handleOpenHistory} = props;
@@ -27,7 +26,6 @@ const HistoryArea = (props) => {
             })
         }
 
-        console.log('moment: ', moment('2020-12-01T16:20:43.010Z').tz('Asia/Ho_Chi_Minh').format('HH:mm:ss | dddd DD/MM/YYYY') )
         fetchHistory();
     }, [])
 
@@ -35,18 +33,18 @@ const HistoryArea = (props) => {
 
     return (
         <View>
-            <Button
-                onPress={() => handleOpenHistory(false)}
-            >
-                CLOSE
-            </Button>
-            <View
+            <View style={{alignItems: 'flex-end'}} >
+                <MaterialCommunityIcons name="close" size={40} color="#000" onPress={() => handleOpenHistory(false)} />
+            </View>
+            <ScrollView
+                style={{marginBottom: 40}}
             >   
                     {isLoading &&
-                    <ActivityIndicator 
-                        animating={true} 
-                        color="#000" 
-                    />} 
+                        <ActivityIndicator 
+                            animating={true} 
+                            color="#000" 
+                        />
+                    } 
                     {   
                         userHistory &&
                         userHistory.map(history => (
@@ -82,7 +80,7 @@ const HistoryArea = (props) => {
                             
                         ))
                     } 
-            </View>
+            </ScrollView>
         </View>
     )
 }
