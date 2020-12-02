@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import {View, Text} from 'react-native';
-import { Button, ActivityIndicator, Divider } from 'react-native-paper';
+import {View, Text, Dimensions} from 'react-native';
+import { Button, ActivityIndicator, Divider, Title, Chip, Subheading } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import historyApi from '../../../api/historyApi';
+
+const fullWidth = Dimensions.get("screen").width;
 
 const HistoryArea = (props) => {
     const {handleOpenHistory} = props;
@@ -28,7 +30,7 @@ const HistoryArea = (props) => {
     // console.log('profile: ', profileUser);
 
     return (
-        <View style={{flex: 1}}>
+        <View>
             <Button
                 onPress={() => handleOpenHistory(false)}
             >
@@ -46,20 +48,32 @@ const HistoryArea = (props) => {
                         userHistory.map(history => (
                             <View
                                 key={history._id}
-                                style={{marginBottom: 15, padding: 10}}
+                                style={{ padding: 10}}
                             >
                                 {
                                     history.qrcode.subject.map(subject => (
-                                        <Text>{subject.name}</Text>
+                                        <Title 
+                                            key={subject._id} 
+                                            style={{marginBottom: 5}}
+                                        >
+                                            {subject.name}
+                                        </Title>
                                     ))
                                 }
-                                {
-                                    history.qrcode.classes.map(classes => (
-                                        <Text>{classes.name}</Text>
-                                    ))
-                                }
-                                <Text>{history.createdAt}</Text>    
-                                <Divider />
+                                <View style={{flexDirection: "row", marginBottom: 5}}>
+                                    {
+                                        history.qrcode.classes.map(classes => (
+                                            <Chip 
+                                                key={classes._id}
+                                                style={{backgroundColor: '#2d88ff', marginRight: 5}}
+                                            >
+                                                <Subheading>{classes.name}</Subheading>
+                                            </Chip>
+                                        ))
+                                    }
+                                </View>
+                                <Subheading>Ngày điểm danh: {history.createdAt}</Subheading>    
+                                <Divider style={{marginTop: 15}}/>
                             </View>
                             
                         ))
