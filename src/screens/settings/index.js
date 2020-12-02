@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {Image, View,Text, ScrollView, Dimensions, StatusBar} from 'react-native';
+import {Image, View,Text, ScrollView, Dimensions, StatusBar, Alert} from 'react-native';
 import {TextInput, Button} from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -14,8 +14,23 @@ const SettingsScreen = (props) => {
     const dispatch = useDispatch();
 
     const handleSignOut = () => {
-        dispatch({ type: 'SIGN_OUT' });
-        AsyncStorage.removeItem('userToken');
+        Alert.alert(
+            "",
+            "Bạn chắc chắn muốn đăng xuất?",
+            [
+                {
+                    text: "Hủy"
+                },
+                {
+                    text: "OK",
+                    onPress: () => {
+                        dispatch({ type: 'SIGN_OUT' });
+                        AsyncStorage.removeItem('userToken');
+                    }
+                },
+            ],
+            { cancelable: false }
+        );
     } 
 
     return (
