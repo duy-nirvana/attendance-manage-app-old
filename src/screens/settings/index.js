@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import {Image, View,Text, ScrollView, Dimensions, StatusBar, Alert} from 'react-native';
+import {Image, View, Modal, ScrollView, Dimensions, StatusBar, Alert} from 'react-native';
 import {TextInput, Button} from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import userApi from '../../api/userApi';
-import classApi from '../../api/classApi';
+import UpdatePassword from './components/UpdatePassword';
 
 const fullWidth = Dimensions.get('screen').width; //full width
 const statusBarHeight = StatusBar.currentHeight;
 
 const SettingsScreen = (props) => {
+    const [hasOpenChangePassword, setOpenChangePassword] = useState(false);
     const profileUser = useSelector(state => state.profile.profile);
     const dispatch = useDispatch();
 
-    const handleSignOut = () => {
+    const handleOpenChangePassword = (status) => {
+        setOpenChangePassword(status);
+    }
+
+    const verifySignOut = () => {
         Alert.alert(
             "",
             "Bạn chắc chắn muốn đăng xuất?",
@@ -23,14 +27,16 @@ const SettingsScreen = (props) => {
                 },
                 {
                     text: "OK",
-                    onPress: () => {
-                        dispatch({ type: 'SIGN_OUT' });
-                        AsyncStorage.removeItem('userToken');
-                    }
+                    onPress: () => handleSignOut()
                 },
             ],
             { cancelable: false }
         );
+    }
+
+    const handleSignOut = () => {
+        dispatch({ type: 'SIGN_OUT' });
+        AsyncStorage.removeItem('userToken');
     } 
 
     return (
@@ -72,18 +78,33 @@ const SettingsScreen = (props) => {
                     value={profileUser.email}
                     editable={false}
                 />
-                <Button mode="outlined" color="white" style={{width: fullWidth * .9,  backgroundColor: 'navy', padding: 10, marginTop: 10}}> 
+                <Button 
+                    mode="outlined" 
+                    color="white" 
+                    style={{width: fullWidth * .9,  backgroundColor: 'navy', padding: 10, marginTop: 10}}
+                    onPress={() => handleOpenChangePassword(true)}
+                > 
                     ĐỔI MẬT KHẨU
                 </Button>
                 <Button 
                     mode="outlined" 
                     color="white" 
                     style={{width: fullWidth * .9,  backgroundColor: 'black', padding: 10, marginTop: 10}}
-                    onPress={handleSignOut}
+                    onPress={verifySignOut}
                 > 
                     ĐĂNG XUẤT
                 </Button>
+                <Modal
+                    animationType="slide"
+                    visible={hasOpenChangePassword}
+                >   
+                    <UpdatePassword 
+                        handleOpenChangePassword={handleOpenChangePassword}
+                        handleSignOut={handleSignOut}
+                    />
+                </Modal>
             </ScrollView>
+
         </View>
     )
 }

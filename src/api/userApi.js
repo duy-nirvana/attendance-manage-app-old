@@ -13,6 +13,10 @@ const userApi = {
                 'token': token
             }
         })
+    },
+    updatePassword: (id, body) => {
+        const url = `/users/password/${id}`;
+        return axiosClient.post(url, body);
     }
 }
 

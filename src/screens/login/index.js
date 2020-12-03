@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {View, Text, StatusBar, Dimensions} from 'react-native';
 import {TextInput, Title, Button, ActivityIndicator} from 'react-native-paper';
-import { Toast } from 'react-native-root-toaster';
+import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
 import authApi from '../../api/authApi';
@@ -45,7 +45,7 @@ const LoginScreen = (props) => {
             .catch(err => {
                 setLoading(false);
                 const errors = JSON.parse(err.response.request._response);
-                Toast.show(`${handleChangeErrorsToString(errors)}`);
+                Toast.show(`${handleChangeErrorsToString(errors)}`, Toast.LONG);
             });
         } catch (error) {
             console.log('Fail to login', error);
