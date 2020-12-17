@@ -28,8 +28,6 @@ const UpdatePassword = (props) => {
 
     }, [currentPassword, newPassword, confirmNewPassword])
 
-    console.log('form submit: ', valueForm);
-
     const handleChangeErrorsToString = (errors) => {
         let errorsString = "";
         errors.errors.map((err) => {

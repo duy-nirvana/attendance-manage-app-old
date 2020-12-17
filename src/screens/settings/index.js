@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {Image, View, Modal, ScrollView, Dimensions, StatusBar, Alert} from 'react-native';
-import {TextInput, Button} from 'react-native-paper';
+import {TextInput, Button, Avatar} from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import UpdatePassword from './components/UpdatePassword';
@@ -43,9 +43,9 @@ const SettingsScreen = (props) => {
         <View style={{backgroundColor: 'white'}}>
             <ScrollView contentContainerStyle={{ flexGrow: 1, alignItems: 'center', paddingTop: statusBarHeight + 20 }}>
                 <Image 
-                    style={{width: 100, height: 100, borderRadius: 40/2, marginBottom: 20}}
+                    style={{width: 100, height: 100, borderRadius: 50, marginBottom: 20}}
                     source={{
-                        uri: "https://www.shareicon.net/data/2015/09/20/104335_avatar_512x512.png"
+                        uri: `${profileUser.avatar}`
                     }}
                 />
                 <TextInput
