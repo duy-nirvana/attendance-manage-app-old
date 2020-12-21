@@ -39,7 +39,8 @@
     "react-native-web": "~0.13.12",
     "react-navigation": "^4.4.3",
     "react-redux": "^7.2.2",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "slugify": "^1.4.6"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
