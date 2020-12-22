@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {Text, View, Dimensions, StyleSheet, StatusBar, Modal, ScrollView, SafeAreaView, Alert} from 'react-native';
 import { Button } from 'react-native-paper';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {Camera} from 'expo-camera';
 import {BarCodeScanner} from 'expo-barcode-scanner';
@@ -75,23 +76,32 @@ const ScanScreen = (props) => {
                 <Button 
                     onPress={() => setOpenCamera(true)}
                     mode={"contained"}
-                    style={{width: fullWidth * 0.9, backgroundColor: '#2d88ff', padding: 10, marginBottom: 20}}
+                    icon={({ size, color }) => (
+                        <MaterialCommunityIcons name="qrcode-scan" size={25} color="#fff" />
+                    )}
+                    style={{width: fullWidth * 0.9, backgroundColor: '#235789', padding: 20, marginBottom: 20}}
                 >
-                    Touch to scan
+                    Điểm danh
                 </Button>
                 <Button 
                     onPress={() => setOpenQRCode(true)}
                     mode={"contained"}
-                    style={{width: fullWidth * 0.9, backgroundColor: '#2d88ff', padding: 10, marginBottom: 20}}
+                    icon={({ size, color }) => (
+                        <MaterialCommunityIcons name="qrcode-edit" size={25} color="#fff" />
+                    )}
+                    style={{width: fullWidth * 0.9, backgroundColor: '#235789', padding: 20, marginBottom: 20}}
                 >
-                    Generate QRCode
+                    Tạo mã QR
                 </Button>
                 <Button 
                     onPress={() => setOpenHistory(true)}
                     mode={"contained"}
-                    style={{width: fullWidth * 0.9, backgroundColor: '#2d88ff', padding: 10}}
+                    icon={({ size, color }) => (
+                        <MaterialCommunityIcons name="history" size={25} color="#fff" />
+                    )}
+                    style={{width: fullWidth * 0.9, backgroundColor: '#235789', padding: 20}}
                 >
-                    Lịch sử
+                    Lịch sử điểm danh
                 </Button>
             </View>
 

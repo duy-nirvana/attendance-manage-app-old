@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import {View, Text, Dimensions, ScrollView} from 'react-native';
-import { TextInput, ActivityIndicator, Divider, Title, Chip, Subheading } from 'react-native-paper';
-import { useSelector } from 'react-redux';
-import subjectApi from '../../../api/subjectApi';
-import historyApi from '../../../api/historyApi';
-import slugify from 'slugify';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import moment from 'moment-timezone';
-import 'moment/locale/vi';  // without this line it didn't work
-import { render } from 'react-dom';
+import 'moment/locale/vi'; // without this line it didn't work
+import React, { useEffect, useState } from 'react';
+import { Dimensions, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Chip, Divider, Subheading, TextInput, Title } from 'react-native-paper';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useSelector } from 'react-redux';
+import slugify from 'slugify';
+import historyApi from '../../../api/historyApi';
 
 const fullWidth = Dimensions.get("screen").width;
 
@@ -97,7 +95,7 @@ const HistoryArea = (props) => {
                                         history.qrcode.classes.map(classes => (
                                             <Chip 
                                                 key={classes._id}
-                                                style={{backgroundColor: '#2d88ff', marginRight: 5, marginTop: 5}}
+                                                style={{backgroundColor: '#235789', marginRight: 5, marginTop: 5}}
                                             >
                                                 <Subheading style={{color: '#fff'}}>{classes.name}</Subheading>
                                             </Chip>

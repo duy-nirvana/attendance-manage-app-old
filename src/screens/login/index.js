@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import {View, Text, StatusBar, Dimensions} from 'react-native';
-import {TextInput, Title, Button, ActivityIndicator} from 'react-native-paper';
-import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, StatusBar, View } from 'react-native';
+import { Button, TextInput, Title } from 'react-native-paper';
+import Toast from 'react-native-simple-toast';
+import { useDispatch } from 'react-redux';
 import authApi from '../../api/authApi';
 
 const statusBarHeight = StatusBar.currentHeight;
@@ -76,19 +76,12 @@ const LoginScreen = (props) => {
             <Button 
                 mode="outlined" 
                 color="white" 
-                style={{width: fullWidth * .9,  backgroundColor: '#2d88ff', padding: 10}}
+                loading={isLoading}
+                style={{width: fullWidth * .9,  backgroundColor: '#235789', padding: 10}}
                 onPress={handleOnPress}
             > 
                 ĐĂNG NHẬP
             </Button>
-            {
-                isLoading && 
-                <ActivityIndicator 
-                    animating={true} 
-                    color="#000" 
-                    style={{marginTop: 10}}
-                />
-            }
         </View>
     )
 }

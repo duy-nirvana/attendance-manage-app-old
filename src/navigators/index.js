@@ -54,7 +54,7 @@ const Navigator = (props) => {
                     ) : (
                     <Tab.Navigator
                         initialRouteName="App"
-                        activeColor= "navy"
+                        activeColor= "#0D1321"
                         barStyle={{ backgroundColor: '#fff', borderTopWidth: .4, borderTopColor: '#aaa' }}
                     >
                         <Tab.Screen 

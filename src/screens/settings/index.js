@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {Image, View, Modal, ScrollView, Dimensions, StatusBar, Alert} from 'react-native';
+import {Image, View, Modal, ScrollView, Dimensions, StatusBar, Alert, Text} from 'react-native';
 import {TextInput, Button, Avatar} from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -81,10 +81,10 @@ const SettingsScreen = (props) => {
                 <Button 
                     mode="outlined" 
                     color="white" 
-                    style={{width: fullWidth * .9,  backgroundColor: 'navy', padding: 10, marginTop: 10}}
+                    style={{width: fullWidth * .9, backgroundColor: '#F1D302', padding: 10, marginTop: 10}}
                     onPress={() => handleOpenChangePassword(true)}
                 > 
-                    ĐỔI MẬT KHẨU
+                    <Text style={{color: '#000'}}>ĐỔI MẬT KHẨU</Text>
                 </Button>
                 <Button 
                     mode="outlined" 
