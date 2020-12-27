@@ -11,6 +11,7 @@ import userApi from '../../api/userApi';
 import CameraArea from './components/CameraArea';
 import GenerateQRCode from './components/GenerateQRCode';
 import HistoryArea from './components/HistoryArea';
+import HistoryGenerateArea from './components/HistoryGenerateArea';
 
 const fullWidth = Dimensions.get('screen').width;
 
@@ -30,11 +31,18 @@ const ScanScreen = (props) => {
         setOpenQRCode(status);
     }
 
-    // History area
+    // History scan qrcode area
     const [hasOpenHistory, setOpenHistory] = useState(false);
 
     const handleOpenHistory = (status) => {
         setOpenHistory(status);
+    }
+
+    // History generate qrcode area
+    const [hasOpenHistoryGenerate, setOpenHistoryGenerate] = useState(false);
+
+    const handleOpenHistoryGenerate = (status) => {
+        setOpenHistoryGenerate(status);
     }
     
     // get detail user
@@ -53,7 +61,6 @@ const ScanScreen = (props) => {
         }
         userProfile();
     }, [])
-
 
     // ---------------------------------------------------------
     useEffect(() => {
@@ -99,9 +106,19 @@ const ScanScreen = (props) => {
                     icon={({ size, color }) => (
                         <MaterialCommunityIcons name="history" size={25} color="#fff" />
                     )}
-                    style={{width: fullWidth * 0.9, backgroundColor: '#235789', padding: 20}}
+                    style={{width: fullWidth * 0.9, backgroundColor: '#235789', padding: 20, marginBottom: 20}}
                 >
                     Lịch sử điểm danh
+                </Button>
+                <Button 
+                    onPress={() => setOpenHistoryGenerate(true)}
+                    mode={"contained"}
+                    icon={({ size, color }) => (
+                        <MaterialCommunityIcons name="history" size={25} color="#fff" />
+                    )}
+                    style={{width: fullWidth * 0.9, backgroundColor: '#235789', padding: 20, marginBottom: 20}}
+                >
+                    Lịch sử tạo mã QR
                 </Button>
             </View>
 
@@ -132,6 +149,16 @@ const ScanScreen = (props) => {
             >   
                 <HistoryArea
                     handleOpenHistory={handleOpenHistory}
+                /> 
+            </Modal>
+
+             {/* HISTORY GENERATE AREA*/}
+             <Modal
+                animationType="slide"
+                visible={hasOpenHistoryGenerate}
+            >   
+                <HistoryGenerateArea
+                    handleOpenHistoryGenerate={handleOpenHistoryGenerate}
                 /> 
             </Modal>
         </View>

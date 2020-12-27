@@ -5,6 +5,10 @@ const qrcodeApi = {
         const url = `/qrcode/${id}`;
         return axiosClient.get(url, {id});
     },
+    getByUserId: (id) => {
+        const url = `/qrcode/user/${id}`;
+        return axiosClient.get(url, {id});
+    },
     createOne: (body) => {
         const url = '/qrcode/create';
         return axiosClient.post(url, body);

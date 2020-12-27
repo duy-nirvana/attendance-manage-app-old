@@ -10,11 +10,13 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import MultiSelect from 'react-native-multiple-select';
 import {Picker} from '@react-native-picker/picker';
+import { useSelector } from 'react-redux';
 
 const fullWidth = Dimensions.get('screen').width;
 
 const GenerateQRCode = (props) => {
     const {handleOpenQRCode} = props;
+    const profileUser = useSelector(state => state.profile.profile);
     const [hasSettingQRCode, setSettingQRCode] = useState(false);
     const [classes, setClasses] = useState([]);
     const [subject, setSubject] = useState([]);
@@ -27,7 +29,8 @@ const GenerateQRCode = (props) => {
     const stringQRCode = {
         classes: selectedClasses,
         subject: selectedSubject,
-        time: selectedTime
+        time: selectedTime,
+        user: profileUser._id
     }
 
     const checkInfoIsNotEmpty = () => {
@@ -72,6 +75,20 @@ const GenerateQRCode = (props) => {
                 text: "Hủy",
               },
               { text: "Đồng ý", onPress: () => generateQRCode() }
+            ],
+            { cancelable: false }
+        );
+    }
+
+    const verifyCloseQRCode = () => {
+        Alert.alert(
+            "QRCODE",
+            "Xác nhận thoát?",
+            [
+              {
+                text: "Hủy",
+              },
+              { text: "Đồng ý", onPress: () => setSettingQRCode(false) }
             ],
             { cancelable: false }
         );
@@ -208,7 +225,9 @@ const GenerateQRCode = (props) => {
                                 />
                             }
                         </View>
-                        <Button onPress={() => setSettingQRCode(false)}>Close</Button>
+                        <Button onPress={verifyCloseQRCode}>
+                            <Text style={{color: '#000'}}>Thoát</Text>
+                        </Button>
                     </Modal>
                     }
             </SafeAreaView>

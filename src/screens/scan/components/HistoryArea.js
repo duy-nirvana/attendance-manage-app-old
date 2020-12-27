@@ -59,8 +59,9 @@ const HistoryArea = (props) => {
                     placeholder="Tìm lịch sử điểm danh" 
                     mode="outlined"
                     value={searchInput}
-                    onChangeText={(value) => setSearchInput(value)} 
+                    theme={{ colors: { primary: 'black', underlineColor:'transparent' }}}
                     style={{width: fullWidth * .9,  backgroundColor: 'white'}}
+                    onChangeText={(value) => setSearchInput(value)} 
                 />
                 <MaterialCommunityIcons name="close" size={40} color="#000" onPress={() => handleOpenHistory(false)} />
             </View>
