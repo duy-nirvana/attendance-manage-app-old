@@ -38,27 +38,27 @@ const HistoryGenerateArea = (props) => {
         setDetailQRCodeModal(true);
     }
 
-    // const filterSubjects = (histories) => {
-    //     const removeMarkSearchString = slugify(searchInput, {
-    //         replacement: ' ',  
-    //         remove: undefined, 
-    //         lower: true,      
-    //         strict: false,     
-    //         locale: 'vi'   
-    //     })
+    const filterSubjects = (histories) => {
+        const removeMarkSearchString = slugify(searchInput, {
+            replacement: ' ',  
+            remove: undefined, 
+            lower: true,      
+            strict: false,     
+            locale: 'vi'   
+        })
 
-    //     return histories && histories.filter((history) => {
-    //         return slugify(history.qrcode.subject[0].name, {
-    //             replacement: ' ',  
-    //             remove: undefined, 
-    //             lower: true,      
-    //             strict: false,     
-    //             locale: 'vi'   
-    //         }).includes(removeMarkSearchString)
-    //     })
-    // }
+        return histories && histories.filter((history) => {
+            return slugify(history.subject[0].name, {
+                replacement: ' ',  
+                remove: undefined, 
+                lower: true,      
+                strict: false,     
+                locale: 'vi'   
+            }).includes(removeMarkSearchString)
+        })
+    }
 
-    // const renderHistory = filterSubjects(historyInfo);
+    const renderHistory = filterSubjects(historyInfo);
 
     return (
         <View>
@@ -83,8 +83,8 @@ const HistoryGenerateArea = (props) => {
                         />
                     } 
                     {   
-                        historyInfo &&
-                        historyInfo.map(history => (
+                        renderHistory &&
+                        renderHistory.map(history => (
                             <TouchableOpacity
                                 key={history._id}
                                 style={{ padding: 10}}
@@ -129,8 +129,7 @@ const HistoryGenerateArea = (props) => {
                     }                     
             </ScrollView>
             {   
-                    <Modal visible={isDetailQRCodeModal}
-                    >
+                    <Modal visible={isDetailQRCodeModal}>
                         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}} >
                             <QRCode
                                 size={fullWidth * 0.9}
