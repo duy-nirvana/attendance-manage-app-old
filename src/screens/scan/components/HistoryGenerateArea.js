@@ -119,6 +119,8 @@ const HistoryGenerateArea = (props) => {
                                         <Text style={{color: 'green', fontWeight: 'bold'}}> Còn</Text> 
                                     }
                                 </Subheading>
+                                <Subheading>Chú thích: {history.description ? history.description : ''}
+                                </Subheading>
                                 <Subheading>Ngày tạo mã: {moment(history.createdAt).tz('Asia/Ho_Chi_Minh').format('HH:mm:ss, dddd DD/MM/YYYY')}</Subheading>    
                                 <Divider style={{marginTop: 15}}/>
                             </TouchableOpacity>
