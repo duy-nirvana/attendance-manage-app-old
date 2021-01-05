@@ -47,13 +47,15 @@ const ScanScreen = (props) => {
     
     // get detail user
     const auth = useSelector(state => state.auth);
+    const profileUser = useSelector(state => state.profile.profile);
     const dispatch = useDispatch();
+    const [roleUser, setRoleUser] = useState('');
 
     useEffect(() => {
         const userProfile = async () => {
             try {
                 const user = await userApi.getDetail(auth.userToken);
-
+                setRoleUser(user.roles);
                 dispatch({type: 'GET_PROFILE', payload: user});
             } catch (error) {
                 console.log('Fail to get detail user', error);
@@ -76,7 +78,7 @@ const ScanScreen = (props) => {
     if (hasPermission === false) {
         return <Text>No access to camera</Text>;
     }
-        
+
     return (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -90,16 +92,20 @@ const ScanScreen = (props) => {
                 >
                     Điểm danh
                 </Button>
-                <Button 
-                    onPress={() => setOpenQRCode(true)}
-                    mode={"contained"}
-                    icon={({ size, color }) => (
-                        <MaterialCommunityIcons name="qrcode-edit" size={25} color="#fff" />
-                    )}
-                    style={{width: fullWidth * 0.9, backgroundColor: '#235789', padding: 20, marginBottom: 20}}
-                >
-                    Tạo mã QR
-                </Button>
+                {
+                    profileUser.roles === 'moderator'
+                    &&
+                    <Button 
+                        onPress={() => setOpenQRCode(true)}
+                        mode={"contained"}
+                        icon={({ size, color }) => (
+                            <MaterialCommunityIcons name="qrcode-edit" size={25} color="#fff" />
+                        )}
+                        style={{width: fullWidth * 0.9, backgroundColor: '#235789', padding: 20, marginBottom: 20}}
+                    >
+                        Tạo mã QR
+                    </Button>
+                }
                 <Button 
                     onPress={() => setOpenHistory(true)}
                     mode={"contained"}
@@ -110,27 +116,37 @@ const ScanScreen = (props) => {
                 >
                     Lịch sử điểm danh
                 </Button>
-                <Button 
-                    onPress={() => setOpenHistoryGenerate(true)}
-                    mode={"contained"}
-                    icon={({ size, color }) => (
-                        <MaterialCommunityIcons name="history" size={25} color="#fff" />
-                    )}
-                    style={{width: fullWidth * 0.9, backgroundColor: '#235789', padding: 20, marginBottom: 20}}
-                >
-                    Lịch sử tạo mã QR
-                </Button>
+                {
+                    profileUser.roles === 'moderator'
+                    &&
+                    <Button 
+                        onPress={() => setOpenHistoryGenerate(true)}
+                        mode={"contained"}
+                        icon={({ size, color }) => (
+                            <MaterialCommunityIcons name="history" size={25} color="#fff" />
+                        )}
+                        style={{width: fullWidth * 0.9, backgroundColor: '#235789', padding: 20, marginBottom: 20}}
+                    >
+                        Lịch sử tạo mã QR
+                    </Button>
+                }
             </View>
+            
+            {   
+                profileUser &&
+                profileUser.roles === 'user'
+                &&
 
+                <Modal
+                    animationType="fade"
+                    visible={hasOpenCamera}
+                > 
+                    <CameraArea 
+                        handleOpenCamera={handleOpenCamera}
+                    />
+                </Modal>
+            }
             {/* CAMERA AREA */}
-            <Modal
-                animationType="fade"
-                visible={hasOpenCamera}
-            > 
-                <CameraArea 
-                    handleOpenCamera={handleOpenCamera}
-                />
-            </Modal>
 
             {/* QRCODE AREA*/}
             <Modal
