@@ -132,21 +132,15 @@ const ScanScreen = (props) => {
                 }
             </View>
             
-            {   
-                profileUser &&
-                profileUser.roles === 'user'
-                &&
-
-                <Modal
-                    animationType="fade"
-                    visible={hasOpenCamera}
-                > 
-                    <CameraArea 
-                        handleOpenCamera={handleOpenCamera}
-                    />
-                </Modal>
-            }
             {/* CAMERA AREA */}
+            <Modal
+                animationType="fade"
+                visible={hasOpenCamera}
+            > 
+                <CameraArea 
+                    handleOpenCamera={handleOpenCamera}
+                />
+            </Modal>
 
             {/* QRCODE AREA*/}
             <Modal

@@ -2,7 +2,7 @@ import moment from 'moment-timezone';
 import 'moment/locale/vi'; // without this line it didn't work
 import React, { useEffect, useState } from 'react';
 import { TouchableOpacity, Text, Dimensions, ScrollView, View, Modal } from 'react-native';
-import { ActivityIndicator, Button, Chip, Divider, Subheading, TextInput, Title } from 'react-native-paper';
+import { ActivityIndicator, Button, Chip, Divider, Subheading, TextInput, Title, Switch } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSelector } from 'react-redux';
 import slugify from 'slugify';
@@ -19,23 +19,39 @@ const HistoryGenerateArea = (props) => {
     const [searchInput, setSearchInput] = useState('');
     const [infoQRCode, setInfoQRCode] = useState("");
     const [isDetailQRCodeModal, setDetailQRCodeModal] = useState(false);
+    const [isSwitchOn, setIsSwitchOn] = useState(false);
+
+    
+    const fetchHistory = async () => {
+        setLoading(true);
+        await qrcodeApi.getByUserId(profileUser._id)
+        .then(res => {
+            setHistoryInfo(res);
+            setLoading(false);
+        })
+    }
 
     useEffect(() => {
-        const fetchHistory = async () => {
-            setLoading(true);
-            await qrcodeApi.getByUserId(profileUser._id)
-            .then(res => {
-                setHistoryInfo(res);
-                setLoading(false);
-            })
-        }
-
         fetchHistory();
     }, [])
+
+    useEffect(() => {
+        fetchHistory();
+    }, [isSwitchOn])
 
     const handleViewQrCodeInfo = (id) => {
         setInfoQRCode(id);
         setDetailQRCodeModal(true);
+    }
+
+    const handleSwitchChange = (id, exp) => {
+        setIsSwitchOn(true);
+        const updateQRCode = async () => {
+            await qrcodeApi.updateExp(id, {isOutOfDate: !exp})
+            await setIsSwitchOn(false)
+        }
+
+        updateQRCode();
     }
 
     const filterSubjects = (histories) => {
@@ -69,7 +85,7 @@ const HistoryGenerateArea = (props) => {
                     value={searchInput}
                     theme={{ colors: { primary: 'black', underlineColor:'transparent' }}}
                     style={{width: fullWidth * .9,  backgroundColor: 'white'}}
-                    onChangeText={(value) => setSearchInput(value)} 
+                    onChangeText={(value) => setSearchInput(value)} isSwitchOn
                 />
                 <MaterialCommunityIcons name="close" size={40} color="#000" onPress={() => handleOpenHistoryGenerate(false)} />
             </View>
@@ -90,39 +106,43 @@ const HistoryGenerateArea = (props) => {
                                 style={{ padding: 10}}
                                 onPress={() => handleViewQrCodeInfo(history._id)}
                             >
-                               {
-                                    history.subject.map(subject => (
-                                        <Title 
-                                            key={subject._id} 
-                                            style={{marginBottom: 5}}
-                                        >
-                                            {subject.name}
-                                        </Title>
-                                    ))
-                                }
-                                <View style={{flexWrap: 'wrap', flexDirection: "row", marginBottom: 5}}>
+                                <View>
                                     {
-                                        history.classes.map(classes => (
-                                            <Chip 
-                                                key={classes._id}
-                                                style={{backgroundColor: '#235789', marginRight: 5, marginTop: 5}}
+                                        history.subject.map(subject => (
+                                            <Title 
+                                                key={subject._id} 
+                                                style={{marginBottom: 5}}
                                             >
-                                                <Subheading style={{color: '#fff'}}>{classes.name}</Subheading>
-                                            </Chip>
+                                                {subject.name}
+                                            </Title>
                                         ))
                                     }
+                                    <View style={{flexWrap: 'wrap', flexDirection: "row", marginBottom: 5}}>
+                                        {
+                                            history.classes.map(classes => (
+                                                <Chip 
+                                                    key={classes._id}
+                                                    style={{backgroundColor: '#235789', marginRight: 5, marginTop: 5}}
+                                                >
+                                                    <Subheading style={{color: '#fff'}}>{classes.name}</Subheading>
+                                                </Chip>
+                                            ))
+                                        }
+                                    </View>
+                                    <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                                        <Subheading>Hiệu lực:</Subheading> 
+                                        <Switch 
+                                            value={!history.isOutOfDate} 
+                                            onValueChange={() => handleSwitchChange(history._id, history.isOutOfDate)} 
+                                            style={{marginTop: 3, marginLeft: 5,transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }] }}
+                                            trackColor={{true: 'black', false: 'grey'}}
+                                        />
+                                    </View>
+                                    <Subheading>Chú thích: {history.description ? history.description : ''}
+                                    </Subheading>
+                                    <Subheading>Ngày tạo mã: {moment(history.createdAt).tz('Asia/Ho_Chi_Minh').format('HH:mm:ss, dddd DD/MM/YYYY')}</Subheading>    
+                                    <Divider style={{marginTop: 15}}/>
                                 </View>
-                                <Subheading>Còn hiệu lực: 
-                                    {history.isOutOfDate ? 
-                                        <Text style={{color: 'red',fontWeight: 'bold'}}> Không</Text> 
-                                        : 
-                                        <Text style={{color: 'green', fontWeight: 'bold'}}> Còn</Text> 
-                                    }
-                                </Subheading>
-                                <Subheading>Chú thích: {history.description ? history.description : ''}
-                                </Subheading>
-                                <Subheading>Ngày tạo mã: {moment(history.createdAt).tz('Asia/Ho_Chi_Minh').format('HH:mm:ss, dddd DD/MM/YYYY')}</Subheading>    
-                                <Divider style={{marginTop: 15}}/>
                             </TouchableOpacity>
                             
                             

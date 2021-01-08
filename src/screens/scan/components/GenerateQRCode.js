@@ -120,7 +120,8 @@ const GenerateQRCode = (props) => {
     }, [])
 
     useEffect(() => {
-        LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+        console.disableYellowBox = true;
+        LogBox.ignoreAllLogs();
     }, [])
 
     const generateQRCode = () => {

@@ -16,6 +16,10 @@ const qrcodeApi = {
     updateById: (id) => {
         const url = `/qrcode/${id}`;
         return axiosClient.patch(url, {id});
+    },
+    updateExp: (id, body) => {
+        const url = `/qrcode/exp/${id}`;
+        return axiosClient.patch(url, body);
     }
 }
 
