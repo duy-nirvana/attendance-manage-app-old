@@ -120,7 +120,6 @@ const GenerateQRCode = (props) => {
     }, [])
 
     useEffect(() => {
-        console.disableYellowBox = true;
         LogBox.ignoreAllLogs();
     }, [])
 
