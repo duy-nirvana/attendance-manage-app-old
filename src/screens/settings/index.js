@@ -56,16 +56,20 @@ const SettingsScreen = (props) => {
                 />
                 <TextInput
                     style={{width: fullWidth * .9,  backgroundColor: 'white'}}
-                    label="MSSV"
+                    label={profileUser.roles === 'user' ? "MSSV" : "MSGV"}
                     value={profileUser.codeNumber}
                     editable={false}
                 />
-                <TextInput
-                    style={{width: fullWidth * .9,  backgroundColor: 'white'}}
-                    label="LỚP"
-                    value={profileUser.classroom.name}
-                    editable={false}
-                />
+                {
+                    profileUser.roles === 'user'
+                    &&
+                    <TextInput
+                        style={{width: fullWidth * .9,  backgroundColor: 'white'}}
+                        label="LỚP"
+                        value={profileUser.classroom.name}
+                        editable={false}
+                    />
+                }
                 <TextInput
                     style={{width: fullWidth * .9,  backgroundColor: 'white'}}
                     label="SĐT"

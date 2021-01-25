@@ -84,10 +84,14 @@ const HistoryGenerateArea = (props) => {
                     mode="outlined"
                     value={searchInput}
                     theme={{ colors: { primary: 'black', underlineColor:'transparent' }}}
-                    style={{width: fullWidth * .9,  backgroundColor: 'white'}}
+                    style={{width: fullWidth * .8,  backgroundColor: 'white', marginLeft: 10}}
                     onChangeText={(value) => setSearchInput(value)} isSwitchOn
                 />
-                <MaterialCommunityIcons name="close" size={40} color="#000" onPress={() => handleOpenHistoryGenerate(false)} />
+                <MaterialCommunityIcons 
+                    name="close" size={40} 
+                    color="#000" 
+                    onPress={() => handleOpenHistoryGenerate(false)}
+                />
             </View>
             <ScrollView
                 style={{marginBottom: 40}}

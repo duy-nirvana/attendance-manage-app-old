@@ -60,7 +60,7 @@ const HistoryArea = (props) => {
                     mode="outlined"
                     value={searchInput}
                     theme={{ colors: { primary: 'black', underlineColor:'transparent' }}}
-                    style={{width: fullWidth * .9,  backgroundColor: 'white'}}
+                    style={{width: fullWidth * .8,  backgroundColor: 'white', marginLeft: 10}}
                     onChangeText={(value) => setSearchInput(value)} 
                 />
                 <MaterialCommunityIcons name="close" size={40} color="#000" onPress={() => handleOpenHistory(false)} />

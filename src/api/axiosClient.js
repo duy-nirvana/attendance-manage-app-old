@@ -2,7 +2,7 @@ import axios from 'axios';
 import queryString from 'query-string';
 
 const axiosClient = axios.create({
-    baseURL:  'http://192.168.1.10:8585/api',
+    baseURL:  'http://192.168.1.15:8585/api',
     headers: {
         'content-type': "application/json"
     },
