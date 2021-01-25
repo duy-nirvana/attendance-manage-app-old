@@ -6,8 +6,10 @@ import { ActivityIndicator, Button, Chip, Divider, Subheading, TextInput, Title,
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSelector } from 'react-redux';
 import slugify from 'slugify';
+import Toast from 'react-native-simple-toast';
 import qrcodeApi from '../../../api/qrcodeApi';
 import QRCode from 'react-native-qrcode-svg';
+import Clipboard from 'expo-clipboard';
 
 const fullWidth = Dimensions.get("screen").width;
 
@@ -42,6 +44,11 @@ const HistoryGenerateArea = (props) => {
     const handleViewQrCodeInfo = (id) => {
         setInfoQRCode(id);
         setDetailQRCodeModal(true);
+    }
+
+    const handleCopyUrlQRCode = (id) => {
+        Clipboard.setString(`https://api.qrserver.com/v1/create-qr-code/?size=800x800&data=${id}`);
+        Toast.show(`Đã sao chép mã QR`, Toast.SHORT);
     }
 
     const handleSwitchChange = (id, exp) => {
@@ -109,6 +116,7 @@ const HistoryGenerateArea = (props) => {
                                 key={history._id}
                                 style={{ padding: 10}}
                                 onPress={() => handleViewQrCodeInfo(history._id)}
+                                onLongPress={() => handleCopyUrlQRCode(history._id)}
                             >
                                 <View>
                                     {

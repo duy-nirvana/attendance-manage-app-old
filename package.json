@@ -19,6 +19,7 @@
     "expo": "~39.0.2",
     "expo-barcode-scanner": "~9.0.0",
     "expo-camera": "~9.0.0",
+    "expo-clipboard": "^1.0.1",
     "expo-status-bar": "~1.0.2",
     "moment-timezone": "^0.5.32",
     "query-string": "^6.13.7",
