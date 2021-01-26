@@ -1,10 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, StatusBar, View } from 'react-native';
+import { Dimensions, StatusBar, View, Image } from 'react-native';
 import { Button, TextInput, Title } from 'react-native-paper';
 import Toast from 'react-native-simple-toast';
 import { useDispatch } from 'react-redux';
 import authApi from '../../api/authApi';
+
+const Logo = require('../../assests/img/logo-app.png');
 
 const statusBarHeight = StatusBar.currentHeight;
 const fullWidth = Dimensions.get('screen').width; //full width
@@ -53,35 +55,37 @@ const LoginScreen = (props) => {
     }
         
     return (
-        <View style={{flex: 1, marginTop: statusBarHeight + 100, alignItems: "center" }}>
-            <Title style={{fontSize: 25, marginBottom: 10 }} >APP ĐIỂM DANH</Title>
-
-            <TextInput 
-                label="MSSV"
-                mode="outlined"
-                value={codeNumberValue}
-                onChangeText={(value) => setCodeNumber(value)}
-                theme={{ colors: { primary: 'black',underlineColor:'transparent' }}}
-                style={{width: fullWidth * 0.9, marginBottom: 15}}
-            />
-            <TextInput 
-                label="Mật Khẩu"
-                mode="outlined"
-                secureTextEntry={true}
-                value={passwordValue}
-                onChangeText={(value) => setPasswordValue(value)}
-                theme={{ colors: { primary: 'black',underlineColor:'transparent' }}}
-                style={{width: fullWidth * 0.9, marginBottom: 15}}
-            />
-            <Button 
-                mode="outlined" 
-                color="white" 
-                loading={isLoading}
-                style={{width: fullWidth * .9,  backgroundColor: '#235789', padding: 10}}
-                onPress={handleOnPress}
-            > 
-                ĐĂNG NHẬP
-            </Button>
+        <View style={{flex: 1, alignItems: "center", justifyContent: 'center', marginTop: statusBarHeight}}>
+            <View style={{flex: 1, alignItems: "center", justifyContent: 'center'}}>
+                <Image source={ Logo } style={{width: 150, height: 150, marginBottom: 20}}/>
+                <TextInput 
+                    label="MSSV"
+                    mode="outlined"
+                    value={codeNumberValue}
+                    onChangeText={(value) => setCodeNumber(value)}
+                    theme={{ colors: { primary: 'black',underlineColor:'transparent' }}}
+                    style={{width: fullWidth * 0.9, marginBottom: 15}}
+                />
+                <TextInput 
+                    label="Mật Khẩu"
+                    mode="outlined"
+                    secureTextEntry={true}
+                    value={passwordValue}
+                    onChangeText={(value) => setPasswordValue(value)}
+                    theme={{ colors: { primary: 'black',underlineColor:'transparent' }}}
+                    style={{width: fullWidth * 0.9, marginBottom: 15}}
+                />
+                <Button 
+                    mode="outlined" 
+                    color="white" 
+                    loading={isLoading}
+                    style={{width: fullWidth * .9,  backgroundColor: '#235789', padding: 10}}
+                    onPress={handleOnPress}
+                > 
+                    ĐĂNG NHẬP
+                </Button>
+            
+            </View>
         </View>
     )
 }
