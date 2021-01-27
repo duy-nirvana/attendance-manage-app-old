@@ -157,14 +157,14 @@ const GenerateQRCode = (props) => {
                             selectText="Chọn lớp học"
                             searchInputPlaceholderText="Tìm lớp học..."
                             tagRemoveIconColor="#fff"
-                            tagBorderColor="#2d88ff"
+                            tagBorderColor="navy"
                             tagTextColor="#fff"
                             selectedItemTextColor="navy"
                             selectedItemIconColor="navy"
                             itemTextColor="#aaa"
                             displayKey="name"
                             searchInputStyle={{ color: '#CCC' }}
-                            tagContainerStyle={{backgroundColor: "#2d88ff", width: fullWidth * 0.35}}
+                            tagContainerStyle={{backgroundColor: "navy", width: fullWidth * 0.35}}
                             submitButtonColor="navy"
                             hideSubmitButton={true}
                             fixedHeight={true}
